@@ -2,3 +2,6 @@
 	path = oakd_lite/object_segmentation/yolov7/train
 	url = https://github.com/laitathei/YOLOv7-Pytorch-Segmentation.git
 	branch = oakd_development
+[submodule "oakd_lite/camera_calibration/kalibr"]
+	path = oakd_lite/camera_calibration/kalibr
+	url = https://github.com/ethz-asl/kalibr.git

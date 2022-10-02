@@ -1,0 +1,89 @@
+rgb:            # from ROS camera_calibration package result
+  image_width: 640
+  image_height: 360
+  distortion_model: plumb_bob
+  distortion_parameters:
+      k1: 0.159399
+      k2: -0.401699
+      p1: -0.001734
+      p2: -0.012341
+      k3: 0.000000
+  projection_parameters:
+      fx: 567.641968
+      fy: 579.647400
+      cx: 322.010173
+      cy: 172.332253
+      Tx: 0.0
+      Ty: 0.0
+      
+left:            # from kalibr result
+   image_width: 640
+   image_height: 480
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: 0.1470407235695673
+      k2: 0.16433407735704453
+      p1: 0.013649763209149469
+      p2: 0.022606639758910724
+      k3: 0.000000
+   projection_parameters:
+      fx: 569.115029351006
+      fy: 565.7491879071429
+      cx: 333.90699172300793
+      cy: 243.23726686960788
+      Tx: 0.0
+      Ty: 0.0
+
+right:            # from kalibr result
+   image_width: 640
+   image_height: 480
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: 0.16687763353212479
+      k2: 0.19529261615650864
+      p1: 0.011477251492739718
+      p2: 0.03144172142921115
+      k3: 0.000000
+   projection_parameters:
+      fx: 601.1135392820456
+      fy: 591.7345678210316
+      cx: 329.97373287741385
+      cy: 242.3104755145417
+      Tx: -45.0835154462 # -fx*0.075
+      Ty: 0.0
+
+depth:            # same as rgb
+  image_width: 640
+  image_height: 360
+  distortion_model: plumb_bob
+  distortion_parameters:
+      k1: 0.159399
+      k2: -0.401699
+      p1: -0.001734
+      p2: -0.012341
+      k3: 0.000000
+  projection_parameters:
+      fx: 567.641968
+      fy: 579.647400
+      cx: 322.010173
+      cy: 172.332253
+      Tx: 0.0
+      Ty: 0.0
+
+# ROS Camera info radtan
+# distortion model in ros camera info (plumb_bob) = simple model of radial and tangential distortion (radtan)
+
+# Distortion coefficients matrix (1x14) = []  # k1,k2,p1,p2,k3,k4,k5,k6,s1,s2,s3,s4,τx,τy # come from calibration_reader.py
+# Distortion coefficients matrix (1x5) = [] # k1,k2,p1,p2,k3 required from plumb_bob and k3 normally is 0
+
+#                                         []
+# Rectification matrix (R matrix) (3x3) = []  # come from calibration_reader.py or just input identity matrix
+#                                         []
+
+#                                            [fx  0 cx]
+# Intrinsic camera matrix (K matrix) (3x3) = [ 0 fy cy]
+#                                            [ 0  0  1]
+             
+#                                             [fx'  0  cx' Tx]
+# Projection/camera matrix (P matrix) (3x4) = [ 0  fy' cy' Ty] (most of the time Tx and Ty is linearly zero)
+#                                             [ 0   0   1   0]

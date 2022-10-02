@@ -1,0 +1,6 @@
+train: "/home/teddylai/Desktop/yolov7/seg/data/yolov7_seg_dataset/train/"
+val: "/home/teddylai/Desktop/yolov7/seg/data/yolov7_seg_dataset/val/"
+# number of classes
+nc: 1
+# class names
+names: ['grass']

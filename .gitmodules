@@ -1,0 +1,4 @@
+[submodule "oakd_lite/object_segmentation/yolov7/train"]
+	path = oakd_lite/object_segmentation/yolov7/train
+	url = https://github.com/laitathei/YOLOv7-Pytorch-Segmentation.git
+	branch = oakd_development

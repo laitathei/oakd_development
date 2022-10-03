@@ -1,4 +1,4 @@
-## Kalibr:
+### Kalibr:
 
 <details><summary>[click for detail step]</summary>
 
@@ -70,6 +70,15 @@ python3 oakd_node.py
 rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect
 ```
 
++ April.yaml format
+```
+target_type: 'aprilgrid' #gridtype
+tagCols: 6               #number of apriltags
+tagRows: 6               #number of apriltags
+tagSize: 0.022           #size of apriltag, edge to edge [m]
+tagSpacing: 0.3          #ratio of space between tags to tagSize
+```
+
 + Get the camera parameters
 ```
 python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left/image_rect /oakd_lite/right/image_rect --models pinhole-radtan pinhole-radtan --target ./april.yaml
@@ -79,7 +88,7 @@ python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left
 
 </details>
 
-## Image pipeline:
+### Image pipeline:
 
 <details><summary>[click for detail step]</summary>
 

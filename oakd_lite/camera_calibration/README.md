@@ -1,6 +1,7 @@
 ### Kalibr:
 
-<details><summary>[click to see]</summary>
+<details><summary>[click for detail step]</summary>
+
 + Install ROS dependency
 ```
 sudo apt-get install ros-noetic-vision-opencv
@@ -80,7 +81,8 @@ python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left
 
 ### Camera calibration (Image pipeline):
 
-<details><summary>[click to see]</summary>
+<details><summary>[click for detail step]</summary>
+
 + Install ROS dependency
 ```
 sudo apt install ros-noetic-image-pipeline

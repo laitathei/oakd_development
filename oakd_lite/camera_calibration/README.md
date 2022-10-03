@@ -79,7 +79,7 @@ python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left
 
 </details>
 
-### Camera calibration (Image pipeline):
+### Image pipeline:
 
 <details><summary>[click for detail step]</summary>
 

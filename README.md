@@ -4,11 +4,11 @@ This repo contains demo application for development purpose
 
 * oakd_lite
     * [Camera Calibration](/oakd_lite/camera_calibration)
-        * [Kalibr] (Done stereo only)
+        * [Kalibr](/oakd_lite/camera_calibration/Kalibr) (Done stereo only)
         * [Image pipeline] (Done)
     * [Visual Inertial Odometry](/oakd_lite/visual_inertial_odometry)
         * [Vins-Mono] (To do)
-        * [Vins-Fusion](/oakd_lite/visual_inertial_odometry/vins_fusion) (To do)
+        * [Vins-Fusion](/oakd_lite/visual_inertial_odometry/VINS-Fusion) (To do)
     * [Visual SLAM](/oakd_lite/visual_slam)
         * [RTAB-map](/oakd_lite/visual_slam/rtabmap) (Done mapping) (rgbd,stereo,icp)
         * ORB-SLAM3 (To do)

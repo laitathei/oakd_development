@@ -31,4 +31,4 @@ This repo contains demo application for development purpose
 - https://blog.csdn.net/sunqin_csdn/article/details/104874374/
 - http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
 - https://www.youtube.com/watch?v=2XM2Rb2pfyQ&ab_channel=FirstPrinciplesofComputerVision
-
+- https://github.com/HKUST-Aerial-Robotics/VINS-Fusion

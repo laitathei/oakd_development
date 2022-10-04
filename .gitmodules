@@ -5,3 +5,6 @@
 [submodule "oakd_lite/camera_calibration/kalibr"]
 	path = oakd_lite/camera_calibration/kalibr
 	url = https://github.com/ethz-asl/kalibr.git
+[submodule "oakd_lite/visual_inertial_odometry/VINS-Fusion"]
+	path = oakd_lite/visual_inertial_odometry/VINS-Fusion
+	url = https://github.com/HKUST-Aerial-Robotics/VINS-Fusion.git

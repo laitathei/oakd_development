@@ -5,6 +5,7 @@ import numpy as np
 import depthai as dai
 import sys
 from pathlib import Path
+import yaml
 
 # ros package
 import rospy
@@ -127,10 +128,15 @@ class oakd_lite():
         self.right_info_pub = rospy.Publisher("/oakd_lite/right/camera_info", CameraInfo, queue_size=1)
         self.rgb_info_pub = rospy.Publisher("/oakd_lite/rgb/camera_info", CameraInfo, queue_size=1)
         self.depth_info_pub = rospy.Publisher("/oakd_lite/depth/camera_info", CameraInfo, queue_size=1)
-        self.loop_rate = rospy.Rate(15)
+        self.loop_rate = rospy.Rate(30)
         
+        # camera calibration method
+        self.calibration_method = "image_pipeline" # kalibr, image_pipeline
+
         # oakd_lite config
         syncNN = True
+        # for d455 baseline is 9.5 cm
+        self.left_right_baseline = 0.075 # 7.5 cm from official website 
 
         # Create pipeline
         self.pipeline = dai.Pipeline()
@@ -179,14 +185,14 @@ class oakd_lite():
         stereo.rectifiedLeft.link(xout_rectif_left.input)
         stereo.rectifiedRight.link(xout_rectif_right.input)
 
-    def left_camera_info(self,D,K,R,P,frame_id):
+    def left_camera_info(self,D,K,R,P,distortion_model,frame_id):
         roi = RegionOfInterest()
         self.left_info = CameraInfo()
         self.left_info.header.stamp = rospy.Time.now() # or rospy.get_rostime()
         self.left_info.header.frame_id = frame_id
-        self.left_info.height = self.rgb_height
-        self.left_info.width = self.rgb_width
-        self.left_info.distortion_model = "rational_polynomial"
+        self.left_info.height = self.depth_height
+        self.left_info.width = self.depth_width
+        self.left_info.distortion_model = distortion_model
         self.left_info.D = D
         self.left_info.K = K
         self.left_info.R = R
@@ -195,14 +201,14 @@ class oakd_lite():
         self.left_info.binning_y = 0
         self.left_info.roi = roi
 
-    def right_camera_info(self,D,K,R,P,frame_id):
+    def right_camera_info(self,D,K,R,P,distortion_model,frame_id):
         roi = RegionOfInterest()
         self.right_info = CameraInfo()
         self.right_info.header.stamp = rospy.Time.now() # or rospy.get_rostime()
         self.right_info.header.frame_id = frame_id
-        self.right_info.height = self.rgb_height
-        self.right_info.width = self.rgb_width
-        self.right_info.distortion_model = "rational_polynomial"
+        self.right_info.height = self.depth_height
+        self.right_info.width = self.depth_width
+        self.right_info.distortion_model = distortion_model
         self.right_info.D = D
         self.right_info.K = K
         self.right_info.R = R
@@ -211,14 +217,14 @@ class oakd_lite():
         self.right_info.binning_y = 0
         self.right_info.roi = roi
         
-    def rgb_camera_info(self,D,K,R,P,frame_id):
+    def rgb_camera_info(self,D,K,R,P,distortion_model,frame_id):
         roi = RegionOfInterest()
         self.rgb_info = CameraInfo()
         self.rgb_info.header.stamp = rospy.Time.now() # or rospy.get_rostime()
         self.rgb_info.header.frame_id = frame_id
         self.rgb_info.height = self.rgb_height
         self.rgb_info.width = self.rgb_width
-        self.rgb_info.distortion_model = "rational_polynomial"
+        self.rgb_info.distortion_model = distortion_model
         self.rgb_info.D = D
         self.rgb_info.K = K
         self.rgb_info.R = R
@@ -227,14 +233,14 @@ class oakd_lite():
         self.rgb_info.binning_y = 0
         self.rgb_info.roi = roi
 
-    def depth_camera_info(self,D,K,R,P,frame_id):
+    def depth_camera_info(self,D,K,R,P,distortion_model,frame_id):
         roi = RegionOfInterest()
         self.depth_info = CameraInfo()
         self.depth_info.header.stamp = rospy.Time.now() # or rospy.get_rostime()
         self.depth_info.header.frame_id = frame_id
         self.depth_info.height = self.rgb_height
         self.depth_info.width = self.rgb_width
-        self.depth_info.distortion_model = "rational_polynomial"
+        self.depth_info.distortion_model = distortion_model
         self.depth_info.D = D
         self.depth_info.K = K
         self.depth_info.R = R
@@ -342,22 +348,65 @@ class oakd_lite():
             # print("len right_R: {}".format(len(right_R)))
             # print("len right_P: {}".format(len(right_P)))
 
-            left_D= [-7.678529739379883, 14.121261596679688, 0.0006415338721126318, 0.00041900016367435455, 29.78580093383789, -7.689117908477783, 14.212541580200195, 29.494033813476562]
-            left_K= [454.1698913574219, 0.0, 320.5162658691406, 0.0, 454.1698913574219, 220.9326629638672, 0.0, 0.0, 1.0]
-            left_R= [0.9988057613372803, -0.005133225582540035, -0.048586953431367874, 0.004993360489606857, 0.999983012676239, -0.002999595133587718, 0.04860152676701546, 0.0027534007094800472, 0.9988144636154175]
-            left_P= [450.0043640136719, 0.0, 300.8768005371094, 33.634437581578965, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
-            right_D= [-7.938346862792969, 35.663291931152344, 0.0014144983142614365, 0.0003827648179139942, -27.760452270507812, -7.938197135925293, 35.60935974121094, -27.798263549804688]
-            right_K= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 1.0]
-            right_R= [0.999995231628418, -0.0010762695455923676, 0.002901612315326929, 0.0010679160477593541, 0.9999952912330627, 0.002878909930586815, -0.002904697088524699, -0.00287579745054245, 0.9999916553497314]
-            right_P= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
-            rgb_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
-            rgb_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
-            rgb_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-            rgb_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
-            depth_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
-            depth_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
-            depth_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-            depth_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
+            # left_D= [-7.678529739379883, 14.121261596679688, 0.0006415338721126318, 0.00041900016367435455, 29.78580093383789, -7.689117908477783, 14.212541580200195, 29.494033813476562]
+            # left_K= [454.1698913574219, 0.0, 320.5162658691406, 0.0, 454.1698913574219, 220.9326629638672, 0.0, 0.0, 1.0]
+            # left_R= [0.9988057613372803, -0.005133225582540035, -0.048586953431367874, 0.004993360489606857, 0.999983012676239, -0.002999595133587718, 0.04860152676701546, 0.0027534007094800472, 0.9988144636154175]
+            # left_P= [450.0043640136719, 0.0, 300.8768005371094, 33.634437581578965, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
+            # right_D= [-7.938346862792969, 35.663291931152344, 0.0014144983142614365, 0.0003827648179139942, -27.760452270507812, -7.938197135925293, 35.60935974121094, -27.798263549804688]
+            # right_K= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 1.0]
+            # right_R= [0.999995231628418, -0.0010762695455923676, 0.002901612315326929, 0.0010679160477593541, 0.9999952912330627, 0.002878909930586815, -0.002904697088524699, -0.00287579745054245, 0.9999916553497314]
+            # right_P= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
+            # rgb_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
+            # rgb_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
+            # rgb_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+            # rgb_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
+            # depth_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
+            # depth_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
+            # depth_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+            # depth_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
+            
+            with open('./oakd_lite_'+self.calibration_method+'.yaml', 'r') as file:
+                camera_parameter = yaml.safe_load(file)
+                rgb_distortion_parameters = camera_parameter["rgb"]["distortion_parameters"]
+                rgb_projection_parameters = camera_parameter["rgb"]["projection_parameters"]
+                rbg_rectification_matrix = camera_parameter["rgb"]["rectification_matrix"]["r"]
+
+                depth_distortion_parameters = camera_parameter["depth"]["distortion_parameters"]
+                depth_projection_parameters = camera_parameter["depth"]["projection_parameters"]
+                depth_rectification_matrix = camera_parameter["depth"]["rectification_matrix"]["r"]
+
+                left_distortion_parameters = camera_parameter["left"]["distortion_parameters"]
+                left_projection_parameters = camera_parameter["left"]["projection_parameters"]
+                left_rectification_matrix = camera_parameter["left"]["rectification_matrix"]["r"]
+
+                right_distortion_parameters = camera_parameter["right"]["distortion_parameters"]
+                right_projection_parameters = camera_parameter["right"]["projection_parameters"]
+                right_rectification_matrix = camera_parameter["right"]["rectification_matrix"]["r"]
+
+                rgb_D = [rgb_distortion_parameters["k1"],rgb_distortion_parameters["k2"],rgb_distortion_parameters["p1"],rgb_distortion_parameters["p2"],rgb_distortion_parameters["k3"]]
+                rgb_K = [rgb_projection_parameters["fx"],0.0,rgb_projection_parameters["cx"],0.0,rgb_projection_parameters["fy"],rgb_projection_parameters["cy"],0.0,0.0,1]
+                rgb_R = np.reshape(np.asarray(rbg_rectification_matrix),(3,3))
+                rgb_P = [rgb_projection_parameters["fx"],0.0,rgb_projection_parameters["cx"],rgb_projection_parameters["Tx"],0.0,rgb_projection_parameters["fy"],rgb_projection_parameters["cy"],rgb_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
+
+                depth_D = [depth_distortion_parameters["k1"],depth_distortion_parameters["k2"],depth_distortion_parameters["p1"],depth_distortion_parameters["p2"],depth_distortion_parameters["k3"]]
+                depth_K = [depth_projection_parameters["fx"],0.0,depth_projection_parameters["cx"],0.0,depth_projection_parameters["fy"],depth_projection_parameters["cy"],0.0,0.0,1]
+                depth_R = np.reshape(np.asarray(depth_rectification_matrix),(3,3))
+                depth_P = [depth_projection_parameters["fx"],0.0,depth_projection_parameters["cx"],depth_projection_parameters["Tx"],0.0,depth_projection_parameters["fy"],depth_projection_parameters["cy"],depth_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
+
+                left_D = [left_distortion_parameters["k1"],left_distortion_parameters["k2"],left_distortion_parameters["p1"],left_distortion_parameters["p2"],left_distortion_parameters["k3"]]
+                left_K = [left_projection_parameters["fx"],0.0,left_projection_parameters["cx"],0.0,left_projection_parameters["fy"],left_projection_parameters["cy"],0.0,0.0,1]
+                left_R = np.reshape(np.asarray(left_rectification_matrix),(3,3))
+                left_P = [left_projection_parameters["fx"],0.0,left_projection_parameters["cx"],left_projection_parameters["Tx"],0.0,left_projection_parameters["fy"],left_projection_parameters["cy"],left_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
+
+                right_D = [right_distortion_parameters["k1"],right_distortion_parameters["k2"],right_distortion_parameters["p1"],right_distortion_parameters["p2"],right_distortion_parameters["k3"]]
+                right_K = [right_projection_parameters["fx"],0.0,right_projection_parameters["cx"],0.0,right_projection_parameters["fy"],right_projection_parameters["cy"],0.0,0.0,1]
+                right_R = np.reshape(np.asarray(right_rectification_matrix),(3,3))
+                right_P = [right_projection_parameters["fx"],0.0,right_projection_parameters["cx"],right_projection_parameters["Tx"],0.0,right_projection_parameters["fy"],right_projection_parameters["cy"],right_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
+
+                rgb_distortion_model = camera_parameter["rgb"]["distortion_model"]
+                depth_distortion_model = camera_parameter["depth"]["distortion_model"]
+                left_distortion_model = camera_parameter["left"]["distortion_model"]
+                right_distortion_model = camera_parameter["right"]["distortion_model"]
 
             # Output queues will be used to get the rgb frames and nn data from the outputs defined above
             previewQueue = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
@@ -386,10 +435,10 @@ class oakd_lite():
                 self.left_pub.publish(self.bridge.cv2_to_imgmsg(rectified_left_image,frame_id="oakd_left_camera_optical_frame",encoding="mono8"))
                 self.right_pub.publish(self.bridge.cv2_to_imgmsg(rectified_right_image,frame_id="oakd_right_camera_optical_frame",encoding="mono8"))
 
-                self.left_camera_info(left_D,left_K,left_R,left_P,frame_id="oakd_left_camera_optical_frame")
-                self.right_camera_info(right_D,right_K,right_R,right_P,frame_id="oakd_right_camera_optical_frame")
-                self.rgb_camera_info(rgb_D,rgb_K,rgb_R,rgb_P,frame_id="oakd_rgb_camera_optical_frame")
-                self.depth_camera_info(depth_D,depth_K,depth_R,depth_P,frame_id="oakd_depth_camera_optical_frame")
+                self.left_camera_info(left_D,left_K,left_R,left_P,rgb_distortion_model,frame_id="oakd_left_camera_optical_frame")
+                self.right_camera_info(right_D,right_K,right_R,right_P,depth_distortion_model,frame_id="oakd_right_camera_optical_frame")
+                self.rgb_camera_info(rgb_D,rgb_K,rgb_R,rgb_P,left_distortion_model,frame_id="oakd_rgb_camera_optical_frame")
+                self.depth_camera_info(depth_D,depth_K,depth_R,depth_P,right_distortion_model,frame_id="oakd_depth_camera_optical_frame")
                 self.left_info_pub.publish(self.left_info)
                 self.right_info_pub.publish(self.right_info)
                 self.rgb_info_pub.publish(self.rgb_info)

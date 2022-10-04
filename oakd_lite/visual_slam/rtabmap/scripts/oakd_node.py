@@ -129,8 +129,11 @@ class oakd_lite():
         self.right_info_pub = rospy.Publisher("/oakd_lite/right/camera_info", CameraInfo, queue_size=1)
         self.rgb_info_pub = rospy.Publisher("/oakd_lite/rgb/camera_info", CameraInfo, queue_size=1)
         self.depth_info_pub = rospy.Publisher("/oakd_lite/depth/camera_info", CameraInfo, queue_size=1)
-        self.loop_rate = rospy.Rate(15)
+        self.loop_rate = rospy.Rate(30)
         
+        # camera calibration method
+        self.calibration_method = "image_pipeline" # kalibr, image_pipeline
+
         # oakd_lite config
         syncNN = True
         # for d455 baseline is 9.5 cm
@@ -365,7 +368,7 @@ class oakd_lite():
 
             home_path = os.path.expanduser("~")
             yaml_path = "/catkin_ws/src/oakd_development/oakd_lite/visual_slam/rtabmap/scripts/"
-            yaml_name = "oakd_lite.yaml"
+            yaml_name = 'oakd_lite_'+self.calibration_method+'.yaml'
             with open(home_path+yaml_path+yaml_name, 'r') as file:
                 camera_parameter = yaml.safe_load(file)
                 rgb_distortion_parameters = camera_parameter["rgb"]["distortion_parameters"]

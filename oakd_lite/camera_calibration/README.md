@@ -105,6 +105,13 @@ python3 oakd_node.py
 rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/oakd_lite/rgb/image camera:=/oakd_lite/rgb/camera_info --no-service-check
 ```
 
++ Stereo camera calibration
+```
+roscore
+python3 oakd_node.py
+rosrun camera_calibration cameracalibrator.py --approximate 0.1 --size 8x6 --square 0.025 right:=/oakd_lite/right/image_rect left:=/oakd_lite/left/image_rect right_camera:=/oakd_lite/right/camera_info left_camera:=/oakd_lite/left/camera_info --no-service-check
+```
+
 ---
 
 </details>

@@ -1,0 +1,98 @@
+rgb:            # from image pipeline result
+   image_width: 640
+   image_height: 360
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: 0.106619
+      k2: -0.311929
+      p1: -0.004058
+      p2: -0.011582
+      k3: 0.000000
+   projection_parameters:
+      fx: 511.076202
+      fy: 520.663452
+      cx: 303.240664
+      cy: 182.895215
+      Tx: 0.0
+      Ty: 0.0
+   rectification_matrix:
+      r: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+
+left:            # from image pipeline result
+   image_width: 640
+   image_height: 480
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: -0.033078
+      k2: 0.018756
+      p1: -0.002931
+      p2: -0.015381
+      k3: 0.000000
+   projection_parameters:
+      fx: 465.836049
+      fy: 465.836049
+      cx: 302.024162
+      cy: 237.381681
+      Tx: 0.0
+      Ty: 0.0
+   rectification_matrix:
+      r: [0.9985230064440241, 0.01425155228961693, -0.052428035051140374, -0.015007958461368523, 0.9997884853775293, -0.01406220783973329, 0.05221653746476423, 0.014828275821629896, 0.9985256909320603]
+
+right:            # from image pipeline result
+   image_width: 640
+   image_height: 480
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: 0.008287
+      k2: -0.010972
+      p1: 0.004314
+      p2: -0.017674
+      k3: 0.000000
+   projection_parameters:
+      fx: 465.836049
+      fy: 465.836049
+      cx: 302.024162
+      cy: 237.381681
+      Tx: -36.450728 # -fx*0.075
+      Ty: 0.0
+   rectification_matrix:
+      r: [0.998176317653488, 0.011904020454545274, -0.05918051345452211, -0.011047193532771846, 0.9998296766160188, 0.0147843590647994, 0.0593464269419195, -0.014103618504667518, 0.9981378109030347]
+
+
+depth:            # same as rgb
+   image_width: 640
+   image_height: 360
+   distortion_model: plumb_bob
+   distortion_parameters:
+      k1: 0.106619
+      k2: -0.311929
+      p1: -0.004058
+      p2: -0.011582
+      k3: 0.000000
+   projection_parameters:
+      fx: 511.076202
+      fy: 520.663452
+      cx: 303.240664
+      cy: 182.895215
+      Tx: 0.0
+      Ty: 0.0
+   rectification_matrix:
+      r: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+
+# ROS Camera info radtan
+# distortion model in ros camera info (plumb_bob) = simple model of radial and tangential distortion (radtan)
+
+# Distortion coefficients matrix (1x14) = []  # k1,k2,p1,p2,k3,k4,k5,k6,s1,s2,s3,s4,τx,τy # come from calibration_reader.py
+# Distortion coefficients matrix (1x5) = [] # k1,k2,p1,p2,k3 required from plumb_bob and k3 normally is 0
+
+#                                         [a b c]
+# Rectification matrix (R matrix) (3x3) = [d e f]  # come from calibration_reader.py or just input identity matrix
+#                                         [g h i]
+
+#                                            [fx  0 cx]
+# Intrinsic camera matrix (K matrix) (3x3) = [ 0 fy cy]
+#                                            [ 0  0  1]
+             
+#                                             [fx'  0  cx' Tx]
+# Projection/camera matrix (P matrix) (3x4) = [ 0  fy' cy' Ty] (most of the time Tx and Ty is linearly zero)
+#                                             [ 0   0   1   0]

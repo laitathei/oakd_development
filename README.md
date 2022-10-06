@@ -17,7 +17,7 @@ This repo contains demo application for development purpose
             * [Inference](/oakd_lite/object_segmentation/yolov7/inference)
                 * [OnnxRuntime](/oakd_lite/object_segmentation/yolov7/inference/OnnxRuntime) (Done)
                 * [Pytorch](/oakd_lite/object_segmentation/yolov7/inference/Pytorch) (Done)
-            * [Train](/oakd_lite/object_segmentation/yolov7/train) (Done)
+            * [Train](https://github.com/laitathei/YOLOv7-Pytorch-Segmentation/tree/5ddbb5f1684cbca11779414e4fc2d8be01133379) (Done)
     * [Object recognition](/oakd_lite/object_recognition) (To do)
 
 

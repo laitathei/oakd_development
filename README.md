@@ -4,11 +4,11 @@ This repo contains demo application for development purpose
 
 * oakd_lite
     * [Camera Calibration](/oakd_lite/camera_calibration)
-        * [Kalibr](/oakd_lite/camera_calibration/kalibr) (Done stereo only)
+        * [Kalibr]((https://github.com/ethz-asl/kalibr/tree/ae129257c97c77bae48f8ceddf01198749ecdd36)) (Done stereo only)
         * [Image pipeline] (Done)
     * [Visual Inertial Odometry](/oakd_lite/visual_inertial_odometry)
         * [Vins-Mono] (To do)
-        * [Vins-Fusion](/oakd_lite/visual_inertial_odometry/VINS-Fusion) (To do)
+        * [Vins-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion/tree/be55a937a57436548ddfb1bd324bc1e9a9e828e0) (To do)
     * [Visual SLAM](/oakd_lite/visual_slam)
         * [RTAB-map](/oakd_lite/visual_slam/rtabmap) (Done mapping) (rgbd,stereo,icp)
         * ORB-SLAM3 (To do)

@@ -4,7 +4,7 @@ This repo contains demo application for development purpose
 
 * oakd_lite
     * [Camera Calibration](/oakd_lite/camera_calibration)
-        * [Kalibr]((https://github.com/ethz-asl/kalibr/tree/ae129257c97c77bae48f8ceddf01198749ecdd36)) (Done stereo only)
+        * [Kalibr](https://github.com/ethz-asl/kalibr/tree/ae129257c97c77bae48f8ceddf01198749ecdd36) (Done stereo only)
         * [Image pipeline] (Done)
     * [Visual Inertial Odometry](/oakd_lite/visual_inertial_odometry)
         * [Vins-Mono] (To do)

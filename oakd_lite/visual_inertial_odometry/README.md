@@ -109,7 +109,7 @@ body_T_cam1: !!opencv-matrix # Inverse of Kalibr result, (transpose for rotation
 ```
 cd ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/vins_fusion
 roslaunch vins vins_rviz.launch
-python3 oakd_node.py
+roslaunch oakd_node oakd_node.launch
 rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/config/oakd_lite_stereo.yaml 
 
 rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/config/oakd_lite_stereo_imu.yaml

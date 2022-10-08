@@ -4,11 +4,11 @@ This repo contains demo application for development purpose
 
 * oakd_lite
     * [Camera Calibration](/oakd_lite/camera_calibration)
-        * [Kalibr] (Done stereo only)
+        * [Kalibr](https://github.com/ethz-asl/kalibr/tree/ae129257c97c77bae48f8ceddf01198749ecdd36) (Done stereo only)
         * [Image pipeline] (Done)
     * [Visual Inertial Odometry](/oakd_lite/visual_inertial_odometry)
         * [Vins-Mono] (To do)
-        * [Vins-Fusion](/oakd_lite/visual_inertial_odometry/vins_fusion) (To do)
+        * [Vins-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion/tree/be55a937a57436548ddfb1bd324bc1e9a9e828e0) (To do)
     * [Visual SLAM](/oakd_lite/visual_slam)
         * [RTAB-map](/oakd_lite/visual_slam/rtabmap) (Done mapping) (rgbd,stereo,icp)
         * ORB-SLAM3 (To do)
@@ -17,7 +17,7 @@ This repo contains demo application for development purpose
             * [Inference](/oakd_lite/object_segmentation/yolov7/inference)
                 * [OnnxRuntime](/oakd_lite/object_segmentation/yolov7/inference/OnnxRuntime) (Done)
                 * [Pytorch](/oakd_lite/object_segmentation/yolov7/inference/Pytorch) (Done)
-            * [Train](/oakd_lite/object_segmentation/yolov7/train) (Done)
+            * [Train](https://github.com/laitathei/YOLOv7-Pytorch-Segmentation/tree/5ddbb5f1684cbca11779414e4fc2d8be01133379) (Done)
     * [Object recognition](/oakd_lite/object_recognition) (To do)
 
 
@@ -31,4 +31,5 @@ This repo contains demo application for development purpose
 - https://blog.csdn.net/sunqin_csdn/article/details/104874374/
 - http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
 - https://www.youtube.com/watch?v=2XM2Rb2pfyQ&ab_channel=FirstPrinciplesofComputerVision
+- https://github.com/HKUST-Aerial-Robotics/VINS-Fusion
 

@@ -67,7 +67,7 @@ python3 kalibr_create_target_pdf --type checkerboard --nx 8 --ny 6 --csx 0.025 -
 ```
 roscore
 python3 oakd_node.py
-rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect
+rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect --output-name=left_right.bag
 ```
 
 + April.yaml format
@@ -79,9 +79,16 @@ tagSize: 0.022           #size of apriltag, edge to edge [m]
 tagSpacing: 0.3          #ratio of space between tags to tagSize
 ```
 
-+ Get the camera parameters
++ Get the camera parameters (stereo)
 ```
 python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left/image_rect /oakd_lite/right/image_rect --models pinhole-radtan pinhole-radtan --target ./april.yaml
+```
+
++ Get the camera parameters (stereo+imu) (imu is wit-motion WT901CTTL)
+```
+rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect /wit/imu --output-name=left_right_imu.bag
+python3 kalibr_calibrate_cameras --bag ./left_right_imu.bag --topics /oakd_lite/left/image_rect /oakd_lite/right/image_rect --models pinhole-radtan pinhole-radtan --target ./april.yaml
+python3 kalibr_calibrate_imu_camera --bag ./left_right_imu.bag --cam left_right_imu-camchain.yaml --imu imu.yaml --target ./april.yaml # it will wait a long time, wait untils got 32 Jacobian parameter
 ```
 
 ---

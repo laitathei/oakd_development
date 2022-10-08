@@ -82,8 +82,7 @@
 
   + Prepare ROS bag
   ```
-  roscore
-  python3 oakd_node.py
+  roslaunch oakd_node oakd_node.launch
   rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect --output-name=left_right.bag
   ```
 
@@ -100,8 +99,7 @@
   
   + Prepare ROS bag
   ```
-  roscore
-  python3 oakd_node.py
+  roslaunch oakd_node oakd_node.launch
   roslaunch wit_ros_imu rviz_and_imu.launch
   rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect /wit/imu --output-name=left_right_imu.bag
   ```
@@ -137,8 +135,7 @@
   <details><summary>[click for detail step]</summary>
 
     ```
-    roscore
-    python3 oakd_node.py
+    roslaunch oakd_node oakd_node.launch
     rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/oakd_lite/rgb/image camera:=/oakd_lite/rgb/camera_info --no-service-check
     ```
 
@@ -149,8 +146,7 @@
   <details><summary>[click for detail step]</summary>
 
     ```
-    roscore
-    python3 oakd_node.py
+    roslaunch oakd_node oakd_node.launch
     rosrun camera_calibration cameracalibrator.py --approximate 0.1 --size 8x6 --square 0.025 right:=/oakd_lite/right/image_rect left:=/oakd_lite/left/image_rect right_camera:=/oakd_lite/right/camera_info left_camera:=/oakd_lite/left/camera_info --no-service-check
     ```
 

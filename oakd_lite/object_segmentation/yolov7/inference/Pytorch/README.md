@@ -10,7 +10,6 @@ python3 pytorch_yolov7_segmentation_image_video_inference.py --weights ./weight/
 
 ## ROS inference
 ```
-roscore
-python3 oakd_node.py
+roslaunch oakd_node oakd_node.launch
 python3 pytorch_yolov7_segmentation_ros_inference.py
 ```

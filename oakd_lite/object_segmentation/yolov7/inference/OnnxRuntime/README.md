@@ -5,8 +5,7 @@ python3 onnxruntime_yolov7_segmentation_image_video_inference.py --weights ./wei
 
 ## ROS inference
 ```
-roscore
-python3 oakd_node.py
+roslaunch oakd_node oakd_node.launch
 python3 onnxruntime_yolov7_segmentation_ros_inference.py
 ```
 

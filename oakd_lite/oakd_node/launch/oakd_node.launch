@@ -1,0 +1,6 @@
+<!-- -->
+<launch>
+  <!-- Start the oakd node program-->>
+	<node name="oakd_node" pkg="oakd_node" type="oakd_node.py" output="screen" />
+
+</launch>

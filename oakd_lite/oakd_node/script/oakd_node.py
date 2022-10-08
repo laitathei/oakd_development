@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import cv2
 import numpy as np
 import depthai as dai
@@ -271,136 +272,43 @@ class oakd_lite():
                         rospy.Time.now(),
                         "oakd_left_camera_optical_frame",
                         "oakd_frame")
-        # br.sendTransform((0.0, 0.0, 0.0),
-        #                 (0.0, 0.0, 0.0, 1.0),
-        #                 rospy.Time.now(),
-        #                 "oakd_frame",
-        #                 "odom")
-        # br.sendTransform((0.0, 0.0, 0.0),
-        #                 (0.0, 0.0, 0.0, 1.0),
-        #                 rospy.Time.now(),
-        #                 "odom",
-        #                 "map")
 
     def main(self):
         # Connect to device and start self.pipeline
         with dai.Device(self.pipeline, usb2Mode = True) as device:
-            # calibFile = str((Path(__file__).parent / Path(f"calib_{device.getMxId()}.json")).resolve().absolute())
-            # if len(sys.argv) > 1:
-            #     calibFile = sys.argv[1]
-
-            # calibData = device.readCalibration()
-            # calibData.eepromToJsonFile(calibFile)
-
-            # M_left = np.array(calibData.getCameraIntrinsics(calibData.getStereoLeftCameraId(), self.depth_width, self.depth_height))
-            # M_right = np.array(calibData.getCameraIntrinsics(calibData.getStereoRightCameraId(), self.depth_width, self.depth_height))
-
-            # # left camera info, distortion model, projection matrix, intrinsic camera matrix
-            # D_left = np.array(calibData.getDistortionCoefficients(dai.CameraBoardSocket.LEFT))
-            # K_left = np.array(calibData.getCameraIntrinsics(dai.CameraBoardSocket.LEFT, self.depth_width, self.depth_height))
-            # R1 = np.array(calibData.getStereoLeftRectificationRotation())
-            # left_D = [data for data in D_left]
-            # left_D = left_D[:8]
-            # left_K = [K_left[0][0],K_left[0][1],K_left[0][2],K_left[1][0],K_left[1][1],K_left[1][2],K_left[2][0],K_left[2][1],K_left[2][2]]
-            # left_P = [K_left[0][0],K_left[0][1],K_left[0][2],33.634437581578965,K_left[1][0],K_left[1][1],K_left[1][2],0.0,K_left[2][0],K_left[2][1],K_left[2][2],0.0]
-
-            # # right camera info, distortion model, projection matrix, intrinsic camera matrix
-            # D_right = np.array(calibData.getDistortionCoefficients(dai.CameraBoardSocket.RIGHT))
-            # K_right = np.array(calibData.getCameraIntrinsics(dai.CameraBoardSocket.RIGHT, self.depth_width, self.depth_height))
-            # R2 = np.array(calibData.getStereoRightRectificationRotation())
-            # right_D = [data for data in D_right]
-            # right_D = right_D[:8]
-            # right_K = [K_right[0][0],K_right[0][1],K_right[0][2],K_right[1][0],K_right[1][1],K_right[1][2],K_right[2][0],K_right[2][1],K_right[2][2]]
-            # right_P = [K_right[0][0],K_right[0][1],K_right[0][2],0.0,K_right[1][0],K_right[1][1],K_right[1][2],0.0,K_right[2][0],K_right[2][1],K_right[2][2],0.0]
-
-            # # rgb camera info, distortion model, projection matrix, intrinsic camera matrix
-            # D_rgb = np.array(calibData.getDistortionCoefficients(dai.CameraBoardSocket.RGB))
-            # K_rgb = np.array(calibData.getCameraIntrinsics(dai.CameraBoardSocket.RGB, self.rgb_width, self.rgb_height))
-            # rgb_D = [data for data in D_rgb]
-            # rgb_D = rgb_D[:8]
-            # rgb_K = [K_rgb[0][0],K_rgb[0][1],K_rgb[0][2],K_rgb[1][0],K_rgb[1][1],K_rgb[1][2],K_rgb[2][0],K_rgb[2][1],K_rgb[2][2]]
-            # rgb_P = [K_rgb[0][0],K_rgb[0][1],K_rgb[0][2],0.0,K_rgb[1][0],K_rgb[1][1],K_rgb[1][2],0.0,K_rgb[2][0],K_rgb[2][1],K_rgb[2][2],0.0]
-
-
-            # # get left right rgb rectification matrix
-            # H_left = np.matmul(np.matmul(M_right, R1), np.linalg.inv(M_left))
-            # left_R = [H_left[0][0],H_left[0][1],H_left[0][2],H_left[1][0],H_left[1][1],H_left[1][2],H_left[2][0],H_left[2][1],H_left[2][2]]
-            # H_right = np.matmul(np.matmul(M_right, R1), np.linalg.inv(M_right))
-            # right_R = [H_right[0][0],H_right[0][1],H_right[0][2],H_right[1][0],H_right[1][1],H_right[1][2],H_right[2][0],H_right[2][1],H_right[2][2]]
-            # rgb_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-
-            # print("H_left: {}".format(H_left))
-            # print("H_right: {}".format(H_right))
-            # print("left_D: {}".format(left_D))
-            # print("left_K: {}".format(left_K))
-            # print("left_R: {}".format(left_R))
-            # print("left_P: {}".format(left_P))
-            # print("right_D: {}".format(right_D))
-            # print("right_K: {}".format(right_K))
-            # print("right_R: {}".format(right_R))
-            # print("right_P: {}".format(right_P))
-            # print("len left_D: {}".format(len(left_D)))
-            # print("len left_K: {}".format(len(left_K)))
-            # print("len left_R: {}".format(len(left_R)))
-            # print("len left_P: {}".format(len(left_P)))
-            # print("len right_D: {}".format(len(right_D)))
-            # print("len right_K: {}".format(len(right_K)))
-            # print("len right_R: {}".format(len(right_R)))
-            # print("len right_P: {}".format(len(right_P)))
-
-            # left_D= [-7.678529739379883, 14.121261596679688, 0.0006415338721126318, 0.00041900016367435455, 29.78580093383789, -7.689117908477783, 14.212541580200195, 29.494033813476562]
-            # left_K= [454.1698913574219, 0.0, 320.5162658691406, 0.0, 454.1698913574219, 220.9326629638672, 0.0, 0.0, 1.0]
-            # left_R= [0.9988057613372803, -0.005133225582540035, -0.048586953431367874, 0.004993360489606857, 0.999983012676239, -0.002999595133587718, 0.04860152676701546, 0.0027534007094800472, 0.9988144636154175]
-            # left_P= [450.0043640136719, 0.0, 300.8768005371094, 33.634437581578965, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
-            # right_D= [-7.938346862792969, 35.663291931152344, 0.0014144983142614365, 0.0003827648179139942, -27.760452270507812, -7.938197135925293, 35.60935974121094, -27.798263549804688]
-            # right_K= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 1.0]
-            # right_R= [0.999995231628418, -0.0010762695455923676, 0.002901612315326929, 0.0010679160477593541, 0.9999952912330627, 0.002878909930586815, -0.002904697088524699, -0.00287579745054245, 0.9999916553497314]
-            # right_P= [450.0043640136719, 0.0, 300.8768005371094, 0.0, 0.0, 450.0043640136719, 227.22714233398438, 0.0, 0.0, 0.0, 1.0, 0.0]
-            # rgb_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
-            # rgb_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
-            # rgb_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-            # rgb_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
-            # depth_D= [5.5736403465271, 4.625349521636963, -0.0008459454984404147, 0.0009532927651889622, 42.81727981567383, 5.4898786544799805, 3.844762086868286, 44.160743713378906]
-            # depth_K= [501.28552246, 0.0, 321.96432495, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 1.0]
-            # depth_R= [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-            # depth_P= [501.28552246, 0.0, 321.96432495, 0.0, 0.0, 501.28552246, 177.19174194, 0.0, 0.0, 0.0, 1.0, 0.0]
-            
-            with open('./oakd_lite_'+self.calibration_method+'.yaml', 'r') as file:
+            home_path = os.path.expanduser("~")
+            yaml_path = "/catkin_ws/src/oakd_development/oakd_lite/oakd_node/config/"
+            yaml_name = 'oakd_lite_'+self.calibration_method+'.yaml'
+            #with open('./oakd_lite_'+self.calibration_method+'.yaml', 'r') as file:
+            with open(home_path+yaml_path+yaml_name, 'r') as file:
                 camera_parameter = yaml.safe_load(file)
                 rgb_distortion_parameters = camera_parameter["rgb"]["distortion_parameters"]
                 rgb_projection_parameters = camera_parameter["rgb"]["projection_parameters"]
-                rbg_rectification_matrix = camera_parameter["rgb"]["rectification_matrix"]["r"]
-
                 depth_distortion_parameters = camera_parameter["depth"]["distortion_parameters"]
                 depth_projection_parameters = camera_parameter["depth"]["projection_parameters"]
-                depth_rectification_matrix = camera_parameter["depth"]["rectification_matrix"]["r"]
-
                 left_distortion_parameters = camera_parameter["left"]["distortion_parameters"]
                 left_projection_parameters = camera_parameter["left"]["projection_parameters"]
-                left_rectification_matrix = camera_parameter["left"]["rectification_matrix"]["r"]
-
                 right_distortion_parameters = camera_parameter["right"]["distortion_parameters"]
                 right_projection_parameters = camera_parameter["right"]["projection_parameters"]
-                right_rectification_matrix = camera_parameter["right"]["rectification_matrix"]["r"]
 
                 rgb_D = [rgb_distortion_parameters["k1"],rgb_distortion_parameters["k2"],rgb_distortion_parameters["p1"],rgb_distortion_parameters["p2"],rgb_distortion_parameters["k3"]]
                 rgb_K = [rgb_projection_parameters["fx"],0.0,rgb_projection_parameters["cx"],0.0,rgb_projection_parameters["fy"],rgb_projection_parameters["cy"],0.0,0.0,1]
-                rgb_R = np.reshape(np.asarray(rbg_rectification_matrix),(3,3))
+                rgb_R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
                 rgb_P = [rgb_projection_parameters["fx"],0.0,rgb_projection_parameters["cx"],rgb_projection_parameters["Tx"],0.0,rgb_projection_parameters["fy"],rgb_projection_parameters["cy"],rgb_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
 
                 depth_D = [depth_distortion_parameters["k1"],depth_distortion_parameters["k2"],depth_distortion_parameters["p1"],depth_distortion_parameters["p2"],depth_distortion_parameters["k3"]]
                 depth_K = [depth_projection_parameters["fx"],0.0,depth_projection_parameters["cx"],0.0,depth_projection_parameters["fy"],depth_projection_parameters["cy"],0.0,0.0,1]
-                depth_R = np.reshape(np.asarray(depth_rectification_matrix),(3,3))
+                depth_R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
                 depth_P = [depth_projection_parameters["fx"],0.0,depth_projection_parameters["cx"],depth_projection_parameters["Tx"],0.0,depth_projection_parameters["fy"],depth_projection_parameters["cy"],depth_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
 
                 left_D = [left_distortion_parameters["k1"],left_distortion_parameters["k2"],left_distortion_parameters["p1"],left_distortion_parameters["p2"],left_distortion_parameters["k3"]]
                 left_K = [left_projection_parameters["fx"],0.0,left_projection_parameters["cx"],0.0,left_projection_parameters["fy"],left_projection_parameters["cy"],0.0,0.0,1]
-                left_R = np.reshape(np.asarray(left_rectification_matrix),(3,3))
+                left_R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
                 left_P = [left_projection_parameters["fx"],0.0,left_projection_parameters["cx"],left_projection_parameters["Tx"],0.0,left_projection_parameters["fy"],left_projection_parameters["cy"],left_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
 
                 right_D = [right_distortion_parameters["k1"],right_distortion_parameters["k2"],right_distortion_parameters["p1"],right_distortion_parameters["p2"],right_distortion_parameters["k3"]]
                 right_K = [right_projection_parameters["fx"],0.0,right_projection_parameters["cx"],0.0,right_projection_parameters["fy"],right_projection_parameters["cy"],0.0,0.0,1]
-                right_R = np.reshape(np.asarray(right_rectification_matrix),(3,3))
+                right_R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
                 right_P = [right_projection_parameters["fx"],0.0,right_projection_parameters["cx"],right_projection_parameters["Tx"],0.0,right_projection_parameters["fy"],right_projection_parameters["cy"],right_projection_parameters["Ty"],0.0,0.0,1.0,0.0]
 
                 rgb_distortion_model = camera_parameter["rgb"]["distortion_model"]
@@ -443,12 +351,6 @@ class oakd_lite():
                 self.right_info_pub.publish(self.right_info)
                 self.rgb_info_pub.publish(self.rgb_info)
                 self.depth_info_pub.publish(self.depth_info)
-                # cv2.imshow("left", left_image)
-                # cv2.imshow("right", right_image)
-                # cv2.imshow("depth", depthFrameColor)
-                # cv2.imshow("rgb", frame)
-                # if cv2.waitKey(1) == ord('q'):
-                #     break
                 self.loop_rate.sleep()
 
 if __name__ == '__main__':

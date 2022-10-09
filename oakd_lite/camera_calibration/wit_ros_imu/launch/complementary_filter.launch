@@ -1,0 +1,29 @@
+<!-- ComplementaryFilter launch file -->
+<launch>
+
+    <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" output="screen" />
+
+    <!-- imu型号，默认 normal -->
+    <arg name="type" default="normal" doc="type [normal, modbus]"/>
+
+    <!-- imu 对应 python 文件 -->
+    <node pkg="wit_ros_imu" type="wit_$(arg type)_ros.py" name="imu" output="screen">
+        <param name="port"               type = "str"    value="/dev/ttyUSB0"/>
+        <param name="baud"               type = "int"    value="9600"/>
+    </node>
+
+    <!-- 加载 rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find wit_ros_imu)/rviz/wit_ros_imu.rviz"></node>
+
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen">
+        <param name="do_bias_estimation" value="true"/>
+        <param name="do_adaptive_gain" value="true"/>
+        <param name="use_mag" value="true"/>
+        <param name="gain_acc" value="0.01"/>
+        <param name="gain_mag" value="0.01"/>
+        <param name="publish_tf" value="true"/>
+        <remap from="imu/data_raw" to="/wit/imu"/>
+        <remap from="imu/mag" to="/wit/mag"/>
+    </node>
+
+</launch>

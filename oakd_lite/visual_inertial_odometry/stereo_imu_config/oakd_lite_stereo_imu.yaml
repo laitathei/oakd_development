@@ -24,18 +24,18 @@ body_T_cam0: !!opencv-matrix  # T_ic:(cam0 to imu0):
    rows: 4
    cols: 4
    dt: d
-   data: [-0.0096388,-0.00337655,0.99994784,0.00059751,
-          -0.99971708,-0.02171366,-0.00970989,-0.00045322,
-          0.02174531,-0.99975853,-0.0031663,0.0000265,
+   data: [-0.03553172, -0.01829467, 0.99920108,  0.01054845,
+          -0.99936323,  0.00391202, -0.03546586,  0.03855019,
+          -0.00326006, -0.99982499, -0.01842202, -0.00459116,
           0, 0, 0, 1]
 
 body_T_cam1: !!opencv-matrix # T_ic:(cam1 to imu0):
    rows: 4
    cols: 4
    dt: d
-   data: [0.01041671,-0.00427108,0.99993662,0.00171211,
-          -0.99970228,-0.02210983,0.01031983,-0.07777024,
-          0.02206435,-0.99974642,-0.00450012,0.00153162,
+   data: [-0.01413816, -0.01665891,  0.99976127,  0.00892325,
+          -0.99989388,  0.00374793, -0.01407759, -0.0388302,
+          -0.00351251, -0.99985421, -0.01671013, -0.00488317,
           0, 0, 0, 1]
 
 #Multiple thread support
@@ -55,10 +55,10 @@ max_num_iterations: 8   # max solver itrations, to guarantee real time
 keyframe_parallax: 10.0 # keyframe selection threshold (pixel)
 
 #imu parameters       The more accurate parameters you provide, the better performance
-acc_n: 0.1          # accelerometer measurement noise standard deviation. 
-gyr_n: 0.01         # gyroscope measurement noise standard deviation.     
-acc_w: 0.001        # accelerometer bias random work noise standard deviation.  
-gyr_w: 0.0001       # gyroscope bias random work noise standard deviation.     
+acc_n: 0.01          # accelerometer measurement noise standard deviation. 
+gyr_n: 0.005         # gyroscope measurement noise standard deviation.     
+acc_w: 0.0002        # accelerometer bias random work noise standard deviation.  
+gyr_w: 4e-06       # gyroscope bias random work noise standard deviation.     
 g_norm: 9.81007     # gravity magnitude
 
 #unsynchronization parameters

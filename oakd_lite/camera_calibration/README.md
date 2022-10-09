@@ -111,7 +111,7 @@
   + imu.yaml config
   ```
   rostopic: /imu/data
-  update_rate: 10.0 #Hz
+  update_rate: 200.0 #Hz
   
   accelerometer_noise_density: 0.01 # continous
   accelerometer_random_walk: 0.0002

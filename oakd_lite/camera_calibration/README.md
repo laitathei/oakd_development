@@ -100,8 +100,8 @@
   + Prepare ROS bag
   ```
   roslaunch oakd_node oakd_node.launch
-  roslaunch wit_ros_imu rviz_and_imu.launch
-  rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect /wit/imu --output-name=left_right_imu.bag
+  roslaunch wit_ros_imu complementary_filter.launch
+  rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect /imu/data --output-name=left_right_imu.bag
   ```
   
   + Get the camera parameters

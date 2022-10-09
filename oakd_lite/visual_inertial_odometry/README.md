@@ -1,116 +1,123 @@
-- Install dependency
-```
-sudo apt-get install cmake
-sudo apt-get install libgoogle-glog-dev libgflags-dev
-sudo apt-get install libatlas-base-dev
-sudo apt-get install libeigen3-dev
-sudo apt-get install libsuitesparse-dev
-```
+<details><summary>[click for detail step]</summary>
 
-- Download [latest stable release Ceres Solver](http://ceres-solver.org/installation.html)
-```
-wget http://ceres-solver.org/ceres-solver-2.1.0.tar.gz
-tar zxf ceres-solver-2.1.0.tar.gz
-mkdir ceres-bin
-cd ceres-bin
-cmake ../ceres-solver-2.1.0
-make -j3
-make test
-sudo make install
-```
++ #### Prerequisite:
 
-- Build Vins-Fusion with ROS
-```
-cd ~/catkin_ws/src
-git clone https://github.com/HKUST-Aerial-Robotics/VINS-Fusion.git
-cd ../
-catkin_make
-source ~/catkin_ws/devel/setup.bash
-```
+  + Install dependency
+  ```
+  sudo apt-get install cmake
+  sudo apt-get install libgoogle-glog-dev libgflags-dev
+  sudo apt-get install libatlas-base-dev
+  sudo apt-get install libeigen3-dev
+  sudo apt-get install libsuitesparse-dev
+  ```
 
-- Modify Vins-Fusion CMakeList
-```
-#set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_CXX_STANDARD 14)
-```
+  + Download [latest stable release Ceres Solver](http://ceres-solver.org/installation.html)
+  ```
+  wget http://ceres-solver.org/ceres-solver-2.1.0.tar.gz
+  tar zxf ceres-solver-2.1.0.tar.gz
+  mkdir ceres-bin
+  cd ceres-bin
+  cmake ../ceres-solver-2.1.0
+  make -j3
+  make test
+  sudo make install
+  ```
 
-- Add header file to Chessboard.h
-```
-#include <opencv2/imgproc/types_c.h>
-#include <opencv2/calib3d/calib3d_c.h>
-```
+  + Build Vins-Fusion with ROS
+  ```
+  cd ~/catkin_ws/src
+  git clone https://github.com/HKUST-Aerial-Robotics/VINS-Fusion.git
+  cd ../
+  catkin_make
+  source ~/catkin_ws/devel/setup.bash
+  ```
 
-- Add header file to CameraCalibration.h
-```
-#include <opencv2/imgproc/types_c.h>
-#include <opencv2/imgproc/imgproc_c.h>
-```
+  + Modify Vins-Fusion CMakeList
+  ```
+  #set(CMAKE_CXX_FLAGS "-std=c++11")
+  set(CMAKE_CXX_STANDARD 14)
+  ```
 
-- Add header file to BRIEF.h
-```
-#include <opencv2/imgproc/types_c.h>
-```
+  + Add header file to Chessboard.h
+  ```
+  #include <opencv2/imgproc/types_c.h>
+  #include <opencv2/calib3d/calib3d_c.h>
+  ```
 
-- Add header file to feature_tracker.h
-```
-#include <opencv2/highgui.hpp>
-#include <opencv2/cvconfig.h>
-#include <opencv2/imgproc/types_c.h>
-```
+  + Add header file to CameraCalibration.h
+  ```
+  #include <opencv2/imgproc/types_c.h>
+  #include <opencv2/imgproc/imgproc_c.h>
+  ```
 
-- Add header file to pose_graph.h and keyframe.h
-```
-#include <opencv2/imgproc/imgproc_c.h>
-```
+  + Add header file to BRIEF.h
+  ```
+  #include <opencv2/imgproc/types_c.h>
+  ```
 
-- Modify KITTIGPSTest.cpp and KITTIOdomTest.cpp
-```
-CV_LOAD_IMAGE_GRAYSCALE -> cv::IMREAD_GRAYSCALE
-```
+  + Add header file to feature_tracker.h
+  ```
+  #include <opencv2/highgui.hpp>
+  #include <opencv2/cvconfig.h>
+  #include <opencv2/imgproc/types_c.h>
+  ```
 
-- Kalibr result explain
-```
-                  [r11 r12 r13 Tx]   [R T]
-T_cn_cnm1 (4x4) = [r21 r22 r23 Ty] = [0 1]
-                  [r31 r32 r33 Tz]
-                  [0 0 0 1]
-R (3x3) is come from baseline q vector (quaternion vector) [q1 q2 q3 q4], you need to convert it to rotation matrix
-T (3x1) is come from baseline t vector (translation vector) [Tx Ty Tz] or [t1 t2 t3]
-```
+  + Add header file to pose_graph.h and keyframe.h
+  ```
+  #include <opencv2/imgproc/imgproc_c.h>
+  ```
 
-- Turn quaternion to rotation matrix
-```
-# change q1,q2,q3,q4 before you use
-python3 quaternion2rotation.py
-```
+  + Modify KITTIGPSTest.cpp and KITTIOdomTest.cpp
+  ```
+  CV_LOAD_IMAGE_GRAYSCALE -> cv::IMREAD_GRAYSCALE
+  ```
 
-- Place result to vins-fusion config.yaml
-```
-body_T_cam0: !!opencv-matrix  # Inverse of Kalibr result, (transpose for rotation matrix, T'=-R'T)
-   rows: 4
-   cols: 4
-   dt: d
-   data: [0.9987499,0.00259418,-0.0499191,-0.09603513,
-          -0.00291667,0.99997534,-0.0063884,-0.00264404,
-          0.04990129,0.00652601,0.99873283,0.02017904,
-          0, 0, 0, 1]
+  + Kalibr result explain
+  ```
+                    [r11 r12 r13 Tx]   [R T]
+  T_cn_cnm1 (4x4) = [r21 r22 r23 Ty] = [0 1]
+                    [r31 r32 r33 Tz]
+                    [0 0 0 1]
+  R (3x3) is come from baseline q vector (quaternion vector) [q1 q2 q3 q4], you need to convert it to rotation matrix
+  T (3x1) is come from baseline t vector (translation vector) [Tx Ty Tz] or [t1 t2 t3]
+  ```
 
-body_T_cam1: !!opencv-matrix # Inverse of Kalibr result, (transpose for rotation matrix, T'=-R'T)
-   rows: 4
-   cols: 4
-   dt: d
-   data: [0.9987499,-0.00291667,0.04990129,-0.09603513,
-          0.00259418,0.99997534,0.00652601,-0.00264404,
-          -0.0499191,-0.0063884,0.99873283,0.02017904,
-          0, 0, 0, 1]
-```
+  + Turn quaternion to rotation matrix
+  ```
+  # change q1,q2,q3,q4 before you use
+  python3 quaternion2rotation.py
+  ```
+
+  + Place result to vins-fusion config.yaml
+  ```
+  body_T_cam0: !!opencv-matrix  # T_ic:(cam0 to imu0): 
+     rows: 4
+     cols: 4
+     dt: d
+     data: [-0.0096388,-0.00337655,0.99994784,0.00059751,
+            -0.99971708,-0.02171366,-0.00970989,-0.00045322,
+            0.02174531,-0.99975853,-0.0031663,0.0000265,
+            0, 0, 0, 1]
+
+  body_T_cam1: !!opencv-matrix # T_ic:(cam1 to imu0):
+     rows: 4
+     cols: 4
+     dt: d
+     data: [0.01041671,-0.00427108,0.99993662,0.00171211,
+            -0.99970228,-0.02210983,0.01031983,-0.07777024,
+            0.02206435,-0.99974642,-0.00450012,0.00153162,
+            0, 0, 0, 1]
+  ```
+
+  </details>
 
 - oakd_lite example
 ```
 cd ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/vins_fusion
 roslaunch vins vins_rviz.launch
 roslaunch oakd_node oakd_node.launch
-rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/config/oakd_lite_stereo.yaml 
+roslaunch wit_ros_imu complementary_filter.launch
+rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/stereo_config/oakd_lite_stereo.yaml 
 
-rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/config/oakd_lite_stereo_imu.yaml
+rosrun vins vins_node ~/catkin_ws/src/oakd_development/oakd_lite/visual_inertial_odometry/stereo_imu_config/oakd_lite_stereo_imu.yaml
 ```

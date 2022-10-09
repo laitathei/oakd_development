@@ -83,12 +83,14 @@
   + Prepare ROS bag
   ```
   roslaunch oakd_node oakd_node.launch
-  rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect --output-name=left_right.bag
+  rosrun topic_tools throttle messages /oakd_lite/left/image_rect 5.0
+  rosrun topic_tools throttle messages /oakd_lite/right/image_rect 5.0
+  rosbag record /oakd_lite/left/image_rect_throttle /oakd_lite/right/image_rect_throttle --output-name=left_right.bag
   ```
 
   + Get the camera parameters (stereo)
   ```
-  python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left/image_rect /oakd_lite/right/image_rect --models pinhole-radtan pinhole-radtan --target ./april.yaml
+  python3 kalibr_calibrate_cameras --bag ./left_right.bag --topics /oakd_lite/left/image_rect_throttle /oakd_lite/right/image_rect_throttle --models pinhole-radtan pinhole-radtan --target ./april.yaml
   ```
 
   </details>
@@ -101,13 +103,26 @@
   ```
   roslaunch oakd_node oakd_node.launch
   roslaunch wit_ros_imu complementary_filter.launch
-  rosbag record /oakd_lite/left/image_rect /oakd_lite/right/image_rect /imu/data --output-name=left_right_imu.bag
+  rosrun topic_tools throttle messages /oakd_lite/left/image_rect 5.0
+  rosrun topic_tools throttle messages /oakd_lite/right/image_rect 5.0
+  rosbag record /oakd_lite/left/image_rect_throttle /oakd_lite/right/image_rect_throttle /imu/data --output-name=left_right_imu.bag
+  ```
+  
+  + imu.yaml config
+  ```
+  rostopic: /imu/data
+  update_rate: 10.0 #Hz
+  
+  accelerometer_noise_density: 0.01 # continous
+  accelerometer_random_walk: 0.0002
+  gyroscope_noise_density: 0.005 # continous
+  gyroscope_random_walk: 4.0e-06
   ```
   
   + Get the camera parameters
   ```
-  python3 kalibr_calibrate_cameras --bag ./left_right_imu.bag --topics /oakd_lite/left/image_rect /oakd_lite/right/image_rect --models pinhole-radtan pinhole-radtan --target ./april.yaml
-  python3 kalibr_calibrate_imu_camera --bag ./left_right_imu.bag --cam left_right_imu-camchain.yaml --imu imu.yaml --target ./april.yaml # it will wait a long time, wait untils got 32 Jacobian parameter
+  python3 kalibr_calibrate_cameras --bag ./left_right_imu.bag --topics /oakd_lite/left/image_rect_throttle /oakd_lite/right/image_rect_throttle --models pinhole-radtan pinhole-radtan --target ./april.yaml
+  python3 kalibr_calibrate_imu_camera --bag ./left_right_imu.bag --cam left_right_imu-camchain.yaml --imu imu.yaml --target ./april.yaml
   ```
 
   </details>

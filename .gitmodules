@@ -8,3 +8,6 @@
 [submodule "oakd_lite/visual_inertial_odometry/VINS-Fusion"]
 	path = oakd_lite/visual_inertial_odometry/VINS-Fusion
 	url = https://github.com/HKUST-Aerial-Robotics/VINS-Fusion.git
+[submodule "oakd_lite/object_segmentation/mask_rcnn/train/opencv_contrib"]
+	path = oakd_lite/object_segmentation/mask_rcnn/train/opencv_contrib
+	url = https://github.com/opencv/opencv_contrib.git

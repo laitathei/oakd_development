@@ -9,7 +9,7 @@ This repo contains demo application for development purpose
     * [Visual Inertial Odometry](/oakd_lite/visual_inertial_odometry)
         * [Vins-Mono] (To do)
         * [Vins-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion/tree/be55a937a57436548ddfb1bd324bc1e9a9e828e0)
-        * [oakd_vins_fusion] (/oakd_lite/visual_inertial_odometry/oakd_vins_fusion)
+        * [oakd_vins_fusion](/oakd_lite/visual_inertial_odometry/oakd_vins_fusion)
     * [Visual SLAM](/oakd_lite/visual_slam)
         * [RTAB-map](/oakd_lite/visual_slam/rtabmap) (Done mapping)
         * ORB-SLAM3 (To do)

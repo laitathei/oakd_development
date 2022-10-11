@@ -55,8 +55,8 @@ max_num_iterations: 8   # max solver itrations, to guarantee real time
 keyframe_parallax: 10.0 # keyframe selection threshold (pixel)
 
 #imu parameters       The more accurate parameters you provide, the better performance
-acc_n: 0.01          # accelerometer measurement noise standard deviation. 
-gyr_n: 0.005         # gyroscope measurement noise standard deviation.     
+acc_n: 0.1414213562373095          # accelerometer measurement noise standard deviation. (Accelerometer Noise density (discrete))
+gyr_n: 0.07071067811865475         # gyroscope measurement noise standard deviation.     (Gyroscope Noise density (discrete))
 acc_w: 0.0002        # accelerometer bias random work noise standard deviation.  
 gyr_w: 4e-06       # gyroscope bias random work noise standard deviation.     
 g_norm: 9.81007     # gravity magnitude

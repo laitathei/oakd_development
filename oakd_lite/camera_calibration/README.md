@@ -66,7 +66,7 @@
   python3 kalibr_create_target_pdf --type checkerboard --nx 8 --ny 6 --csx 0.025 --csy 0.025
   ```
 
-  + April.yaml format
+  + April.yaml config
   ```
   target_type: 'aprilgrid' #gridtype
   tagCols: 6               #number of apriltags
@@ -77,6 +77,36 @@
 
   </details>
 
++ #### Mono calibration:
+  <details><summary>[click for detail step]</summary>
+
+  + Prepare ROS bag
+  ```
+  roslaunch oakd_node oakd_node.launch
+  roslaunch wit_ros_imu complementary_filter.launch
+  rosrun topic_tools throttle messages /oakd_lite/left/image_rect 5.0
+  rosbag record /oakd_lite/left/image_rect_throttle /imu/data --output-name=mono_imu.bag
+  ```
+
+  + imu.yaml config
+  ```
+  rostopic: /imu/data
+  update_rate: 200.0 #Hz
+  
+  accelerometer_noise_density: 0.01 # continous
+  accelerometer_random_walk: 0.0002
+  gyroscope_noise_density: 0.005 # continous
+  gyroscope_random_walk: 4.0e-06
+  ```
+
+  + Get the camera parameters (mono)
+  ```
+  python3 kalibr_calibrate_cameras --bag ./mono_imu.bag --topics /oakd_lite/left/image_rect_throttle --models pinhole-radtan --target ./april.yaml
+  python3 kalibr_calibrate_imu_camera --bag ./mono_imu.bag --cam mono_imu-camchain.yaml --imu imu.yaml --target ./april.yaml
+  ```
+
+  </details>
+  
 + #### Stereo calibration:
   <details><summary>[click for detail step]</summary>
 

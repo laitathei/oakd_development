@@ -27,7 +27,7 @@ python3 json_to_dataset.py --input_dataset_dir ./dataset --output_dataset_dir ./
 
 </details>
 
-+ #### Train:
+#### Train:
 
 <details><summary>[click for detail step]</summary>
 

@@ -20,7 +20,7 @@ from utils.augmentations import letterbox
 class yolov7_segmentation():
     def __init__(self):
         self.bridge = cv_bridge.CvBridge()
-        rospy.init_node('object_detection_tensorrt')
+        rospy.init_node('yolov7_segmentation_onnx')
 
         # Subscribe color and depth image
         rospy.Subscriber("/oakd_lite/rgb/image",Image,self.color_callback)

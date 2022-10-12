@@ -177,10 +177,10 @@ model.eval() # put the model in evaluation mode
 sys.path.append('./openvino_contrib/modules/mo_pytorch')
 
 import mo_pytorch
-mo_pytorch.convert(model, input_shape=[1, 3, 360, 640], model_name='maskrcnn_resnet50_360_640', scale = 255)
+mo_pytorch.convert(model, input_shape=[1, 3, 300, 300], model_name='maskrcnn_resnet50_300_300', scale = 255)
 
-xml_file = "./maskrcnn_resnet50_360_640.xml"
-bin_file = "./maskrcnn_resnet50_360_640.bin"
+xml_file = "./maskrcnn_resnet50_300_300.xml"
+bin_file = "./maskrcnn_resnet50_300_300.bin"
 blob_path = blobconverter.from_openvino(
     xml=xml_file,
     bin=bin_file,

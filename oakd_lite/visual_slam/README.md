@@ -102,8 +102,10 @@ cd build
 cmake ..
 cmake --build .
 
-sudo apt install python-is-python3
+for ~/.bashrc
 export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/home/laitathei/catkin_ws/src/ORB_SLAM2/Examples/ROS
+
+sudo apt install python-is-python3
 echo $ROS_PACKAGE_PATH
 pip3 install --target=/opt/ros/noetic/lib/python3/dist-packages rospkg
 sudo rosdep fix-permissions

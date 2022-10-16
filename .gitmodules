@@ -12,3 +12,6 @@
 [submodule "oakd_lite/object_segmentation/mask_rcnn/train/openvino_contrib"]
 	path = oakd_lite/object_segmentation/mask_rcnn/train/openvino_contrib
 	url = https://github.com/openvinotoolkit/openvino_contrib.git
+[submodule "oakd_lite/visual_slam/ORB_SLAM2"]
+	path = oakd_lite/visual_slam/ORB_SLAM2
+	url = https://github.com/raulmur/ORB_SLAM2.git

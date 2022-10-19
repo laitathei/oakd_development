@@ -9,8 +9,9 @@ class Path(object):
             return '/path/to/datasets/cityscapes/'     # foler that contains leftImg8bit/
         elif dataset == 'coco':
             return '/path/to/datasets/coco/'
-        elif dataset == 'grass':
-            return '/home/teddylai/catkin_ws/src/pytorch-deeplab-xception/VOCdevkit/grass' # change
+        elif dataset == 'custom_dataset':
+            import os
+            return os.getcwd()+'/custom_dataset' # change to your custom dataset path if you want
         else:
             print('Dataset {} not available.'.format(dataset))
             raise NotImplementedError

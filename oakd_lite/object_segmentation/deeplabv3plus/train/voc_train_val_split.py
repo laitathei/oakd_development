@@ -1,9 +1,16 @@
 
 import os
 import random 
+import argparse
 random.seed(0)
-jsonfilepath=r'./VOCdevkit/grass/json'
-saveBasePath=r"./VOCdevkit/grass/ImageSets/Segmentation"
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--jsonfilepath', default=None)
+parser.add_argument('--saveBasePath', default=None)
+args = parser.parse_args()
+
+jsonfilepath=args.jsonfilepath
+saveBasePath=args.saveBasePath
  
 trainval_percent=0.8
 train_percent=0.9

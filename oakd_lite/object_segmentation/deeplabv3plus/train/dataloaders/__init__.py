@@ -1,4 +1,4 @@
-from dataloaders.datasets import cityscapes, coco, combine_dbs, pascal, sbd, grass # change
+from dataloaders.datasets import cityscapes, coco, combine_dbs, pascal, sbd, custom_dataset # change
 from torch.utils.data import DataLoader
 
 def make_data_loader(args, **kwargs):
@@ -37,9 +37,9 @@ def make_data_loader(args, **kwargs):
         test_loader = None
         return train_loader, val_loader, test_loader, num_class
 
-    elif args.dataset == 'grass': # change
-        train_set = grass.VOCSegmentation(args, split='train') # change
-        val_set = grass.VOCSegmentation(args, split='val') # change
+    elif args.dataset == 'custom_dataset': # change
+        train_set = custom_dataset.VOCSegmentation(args, split='train') # change
+        val_set = custom_dataset.VOCSegmentation(args, split='val') # change
         #if args.use_sbd:
         #    sbd_train = sbd.SBDSegmentation(args, split=['train', 'val'])
         #    train_set = combine_dbs.CombineDBs([train_set, sbd_train], excluded=[val_set])

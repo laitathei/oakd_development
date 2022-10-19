@@ -27,9 +27,9 @@ def decode_segmap(label_mask, dataset, plot=False):
     elif dataset == 'cityscapes':
         n_classes = 19
         label_colours = get_cityscapes_labels()
-    elif dataset == 'grass':
-        n_classes = 2
-        label_colours = get_grass_labels()
+    elif dataset == 'custom_dataset':
+        n_classes = 3 # change to your custom dataset class number
+        label_colours = get_custom_dataset_labels()
     else:
         raise NotImplementedError
 
@@ -103,5 +103,5 @@ def get_pascal_labels():
                        [0, 64, 0], [128, 64, 0], [0, 192, 0], [128, 192, 0],
                        [0, 64, 128]])
 
-def get_grass_labels():
-    return np.asarray([[0,0,0],[128,0,0]]) # change
+def get_custom_dataset_labels():
+    return np.asarray([[0,0,0],[128,0,0],[0,128,0]]) # change with your desired mask color for your custom dataset if you want

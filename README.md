@@ -25,7 +25,12 @@ This repo contains demo application for development purpose
                 * [Pytorch](/oakd_lite/object_segmentation/mask_rcnn/inference/Pytorch)
                 * [Blob](/oakd_lite/object_segmentation/mask_rcnn/inference/Blob)
             * [Train](/oakd_lite/object_segmentation/mask_rcnn/train)
-
+        * [Deeplabv3plus](/oakd_lite/object_segmentation/deeplabv3plus)
+            * [Inference](/oakd_lite/object_segmentation/deeplabv3plus/inference)
+                * [OnnxRuntime](/oakd_lite/object_segmentation/deeplabv3plus/inference/OnnxRuntime)
+                * [Pytorch](/oakd_lite/object_segmentation/deeplabv3plus/inference/Pytorch)
+                * [Blob](/oakd_lite/object_segmentation/deeplabv3plus/inference/Blob)
+            * [Train](/oakd_lite/object_segmentation/deeplabv3plus/train)
     * [Object recognition](/oakd_lite/object_recognition) (To do)
 
 

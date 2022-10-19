@@ -1,9 +1,0 @@
-datset:grass
-backbone:mobilenet
-out_stride:16
-lr:0.007
-lr_scheduler:poly
-loss_type:ce
-epoch:50
-base_size:513
-crop_size:513

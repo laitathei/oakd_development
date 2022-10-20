@@ -36,6 +36,7 @@ class deeplabv3plus():
         self.sync_bn=False
         self.out_stride=16
         self.backbone = "mobilenet"
+        self.dataset = "custom_dataset"
         self.model = DeepLab(num_classes=self.num_classes,
                         backbone=self.backbone,
                         output_stride=self.out_stride,
@@ -99,7 +100,7 @@ class deeplabv3plus():
             with torch.no_grad():
                 output = self.model(tensor_in)
 
-            grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy()), 3, normalize=False, range=(0, 255))
+            grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy(),dataset=self.dataset), 3, normalize=False, range=(0, 255))
             grid_image_ndarr = grid_image.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
             image = np.array(image,dtype=np.uint8)
             mix = cv2.addWeighted(image,0.8,grid_image_ndarr,1.0,0)

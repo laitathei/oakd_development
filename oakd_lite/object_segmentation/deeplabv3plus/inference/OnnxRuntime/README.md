@@ -1,6 +1,6 @@
 ## Video or Image inference
 ```
-python3 onnxruntime_deeplabv3plus_image_video_inference.py --in-path ./source --weight ./models/model_352_640.onnx
+python3 onnxruntime_deeplabv3plus_image_video_inference.py --in-path ./source --weight ./models/model_352_640.onnx --num_class 6
 ```
 
 ## Convert video to rosbag

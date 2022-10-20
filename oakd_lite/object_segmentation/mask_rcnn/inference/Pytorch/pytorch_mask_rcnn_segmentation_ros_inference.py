@@ -321,8 +321,8 @@ class segmentation():
             float32_frame = cv2.cvtColor(float32_frame,cv2.COLOR_BGR2RGB)
             # Get the filetered boxes, class names, and label indices.
             boxes, pred_classes, labels, pred_scores = self.filter_detections(self.prediction, self.class_names, self.confident_level)
-            print(pred_scores)
-            print(pred_classes)
+            #print(pred_scores)
+            #print(pred_classes)
             # Draw boxes and show current frame on screen.
             result, plot_colors, no_detection_result = self.draw_boxes(boxes, uint8_frame, pred_classes, labels, self.colors, is_instance=True)
             # Draw the segmentation map.

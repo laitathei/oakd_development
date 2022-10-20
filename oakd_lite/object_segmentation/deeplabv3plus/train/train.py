@@ -30,7 +30,7 @@ class Trainer(object):
         self.train_loader, self.val_loader, self.test_loader, self.nclass = make_data_loader(args, **kwargs)
 
         # Define network
-        model = DeepLab(num_classes=self.nclass,
+        model = DeepLab(num_classes=self.args.num_class,  
                         backbone=args.backbone,
                         output_stride=args.out_stride,
                         sync_bn=args.sync_bn,
@@ -189,6 +189,7 @@ def main():
                         help='whether to use SBD dataset (default: True)')
     parser.add_argument('--workers', type=int, default=4,
                         metavar='N', help='dataloader threads')
+    parser.add_argument('--num_class', type=int, help='number of class')
     parser.add_argument('--base-size', type=int, default=513,
                         help='base image size')
     parser.add_argument('--crop-size', type=int, default=513,

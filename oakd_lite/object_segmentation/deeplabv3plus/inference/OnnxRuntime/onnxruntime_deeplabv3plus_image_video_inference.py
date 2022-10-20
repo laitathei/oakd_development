@@ -5,15 +5,15 @@ import onnxruntime
 import cv2
 import time
 
-def decode_seg_map_sequence(label_masks, dataset='grass'): # change
+def decode_seg_map_sequence(label_masks,num_class, dataset='grass'): # change
     rgb_masks = []
     for label_mask in label_masks:
-        rgb_mask = decode_segmap(label_mask, dataset)
+        rgb_mask = decode_segmap(label_mask, dataset, num_class)
         rgb_masks.append(rgb_mask)
     rgb_masks = np.array(rgb_masks).transpose([0, 3, 1, 2])
     return rgb_masks
 
-def decode_segmap(label_mask, dataset, plot=False):
+def decode_segmap(label_mask, dataset, num_class,plot=False):
     """Decode segmentation class labels into a color image
     Args:
         label_mask (np.ndarray): an (M,N) array of integer values denoting
@@ -24,7 +24,7 @@ def decode_segmap(label_mask, dataset, plot=False):
         (np.ndarray, optional): the resulting decoded color image.
     """
     if dataset == 'custom_dataset':
-        n_classes = 2
+        n_classes = num_class
         label_colours = get_custom_dataset_labels()
     else:
         raise NotImplementedError
@@ -61,6 +61,7 @@ parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Inferencing"
 parser.add_argument('--in-path', type=str, required=True, help='image to test')
 parser.add_argument('--weight', type=str, default='./models/model_352_640.onnx',
                     help='saved model')
+parser.add_argument('--num_class', type=int, help='number of class')
 
 args = parser.parse_args()
 
@@ -81,7 +82,7 @@ for name in os.listdir(args.in_path):
         tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
         pred_onnx = sess.run([label_name],{input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
                     # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-        decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=dataset) # (1, 3, 352, 640)
+        decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),args.num_class,dataset=dataset) # (1, 3, 352, 640)
         #print(decode)
         grid_image = np.squeeze(decode, axis=0)
         grid_image = grid_image*255 # mul(255)
@@ -116,7 +117,7 @@ for name in os.listdir(args.in_path):
             tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
             pred_onnx = sess.run([label_name],{input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
                         # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-            decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=dataset) # (1, 3, 352, 640)
+            decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),args.num_class,dataset=dataset) # (1, 3, 352, 640)
             grid_image = np.squeeze(decode, axis=0)
             grid_image = grid_image*255 # mul(255)
             grid_image = grid_image+0.5 # add_(0.5)

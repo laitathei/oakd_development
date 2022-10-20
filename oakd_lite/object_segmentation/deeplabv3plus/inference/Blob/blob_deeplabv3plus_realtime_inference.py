@@ -6,14 +6,14 @@ import numpy as np
 import argparse
 import time
 
-num_of_classes = 2 # define the number of classes in the dataset
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-nn", "--nn_model", help="select model path for inference", type=str)
 parser.add_argument("--h", help="inference image height", type=int)
 parser.add_argument("--w", help="inference image width", type=int)
+parser.add_argument("--num_class", help="number of class", type=int)
 args = parser.parse_args()
 
+num_of_classes = args.num_class
 nn_path = args.nn_model 
 image_height = args.h
 image_width = args.w
@@ -124,4 +124,4 @@ with dai.Device() as device:
         if cv2.waitKey(1) == ord('q'):
             break
 
-# python3 blob_deeplabv3plus_realtime_inference.py --nn_model ./models/model_352_640.blob --h 640 --w 352
+# python3 blob_deeplabv3plus_realtime_inference.py --nn_model ./models/model_352_640.blob --h 640 --w 352 --num_class 6

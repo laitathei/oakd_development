@@ -23,9 +23,9 @@ def decode_segmap(label_mask, dataset, plot=False):
     Returns:
         (np.ndarray, optional): the resulting decoded color image.
     """
-    if dataset == 'grass':
+    if dataset == 'custom_dataset':
         n_classes = 2
-        label_colours = get_grass_labels()
+        label_colours = get_custom_dataset_labels()
     else:
         raise NotImplementedError
 

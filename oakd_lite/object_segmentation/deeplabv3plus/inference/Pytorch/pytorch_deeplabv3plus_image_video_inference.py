@@ -20,15 +20,16 @@ def main():
                         help='backbone name (default: resnet)')
     parser.add_argument('--ckpt', type=str, default='deeplab-resnet.pth',
                         help='saved model')
+    parser.add_argument('--num_class', type=int, help='number of class')
+    args = parser.parse_args()
 
-    num_classes = 2
+    num_classes = args.num_class
     crop_size = 513
     ckpt='./run/grass/deeplab-mobilenet/model_best.pth.tar'
     freeze_bn=False
     sync_bn=False
     out_stride=16
 
-    args = parser.parse_args()
     model_s_time = time.time()
     model = DeepLab(num_classes=num_classes,
                     backbone=args.backbone,

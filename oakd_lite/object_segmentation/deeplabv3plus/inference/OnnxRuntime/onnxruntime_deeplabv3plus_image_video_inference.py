@@ -57,7 +57,7 @@ def composed_transforms(sample,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.
     return {'image': img,
             'label': mask}
 
-parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Inferencing")
+parser = argparse.ArgumentParser(description="OnnxRuntim DeeplabV3Plus Inferencing")
 parser.add_argument('--in-path', type=str, required=True, help='image to test')
 parser.add_argument('--weight', type=str, default='./models/model_352_640.onnx',
                     help='saved model')

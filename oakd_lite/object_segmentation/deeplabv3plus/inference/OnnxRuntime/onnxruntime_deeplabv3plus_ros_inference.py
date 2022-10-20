@@ -27,7 +27,7 @@ class deeplabv3plus():
         self.sess = onnxruntime.InferenceSession(self.weight)
         self.input_name = self.sess.get_inputs()[0].name
         self.label_name = self.sess.get_outputs()[0].name
-
+        self.dataset = "custom_dataset"
 
     def color_callback(self,data):
         # RGB image callback
@@ -131,7 +131,7 @@ class deeplabv3plus():
             tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
             pred_onnx = self.sess.run([self.label_name],{self.input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
             # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-            decode = self.decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1)) # (1, 3, 352, 640)
+            decode = self.decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=self.dataset) # (1, 3, 352, 640)
             grid_image = np.squeeze(decode, axis=0)
             grid_image = grid_image*255 # mul(255)
             grid_image = grid_image+0.5 # add_(0.5)

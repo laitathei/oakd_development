@@ -35,7 +35,7 @@ def main():
                     output_stride=out_stride,
                     sync_bn=sync_bn,
                     freeze_bn=freeze_bn)
-
+    dataset = "custom_dataset"
     ckpt = torch.load(args.ckpt, map_location='cpu')
     model.load_state_dict(ckpt['state_dict'])
     model = model.cuda()
@@ -61,7 +61,7 @@ def main():
             #print(tensor_in.shape) # torch.Size([1, 3, 352, 640])
             with torch.no_grad():
                 output = model(tensor_in)
-            grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy()), 3, normalize=False, range=(0, 255))
+            grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy(),dataset=dataset), 3, normalize=False, range=(0, 255))
             grid_image_ndarr = grid_image.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
             mix = cv2.addWeighted(image,0.8,grid_image_ndarr,1.0,0)
             cv2.imshow("mask",cv2.cvtColor(grid_image_ndarr,cv2.COLOR_BGR2RGB))
@@ -90,7 +90,7 @@ def main():
                 with torch.no_grad():
                     output = model(tensor_in)
 
-                grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy()), 3, normalize=False, range=(0, 255))
+                grid_image = make_grid(decode_seg_map_sequence(torch.max(output[:3], 1)[1].detach().cpu().numpy(),dataset=dataset), 3, normalize=False, range=(0, 255))
                 grid_image_ndarr = grid_image.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to('cpu', torch.uint8).numpy()
                 image = np.array(image,dtype=np.uint8)
                 mix = cv2.addWeighted(image,0.8,grid_image_ndarr,1.0,0)

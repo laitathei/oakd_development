@@ -49,7 +49,7 @@ python3 voc_train_val_split.py --jsonfilepath ./custom_dataset/json --saveBasePa
   
   + Start training
   ```
-  python3 train.py --backbone mobilenet --lr 0.007 --workers 1 --epochs 50 --batch-size 8 --gpu-ids 0 --checkname deeplab-mobilenet --dataset custom_dataset
+  python3 train.py --backbone mobilenet --lr 0.007 --workers 1 --epochs 50 --batch-size 8 --gpu-ids 0 --checkname deeplab-mobilenet --dataset custom_dataset --num_class 6
   ```
 
 </details>

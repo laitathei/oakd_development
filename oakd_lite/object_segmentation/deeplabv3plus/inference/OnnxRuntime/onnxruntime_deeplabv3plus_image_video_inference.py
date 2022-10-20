@@ -67,6 +67,7 @@ args = parser.parse_args()
 sess = onnxruntime.InferenceSession(args.weight) # model_height_width.onnx
 input_name = sess.get_inputs()[0].name
 label_name = sess.get_outputs()[0].name
+dataset = "custom_dataset"
 
 for name in os.listdir(args.in_path):
     if name.endswith('.jpg'):
@@ -80,7 +81,7 @@ for name in os.listdir(args.in_path):
         tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
         pred_onnx = sess.run([label_name],{input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
                     # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-        decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1)) # (1, 3, 352, 640)
+        decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=dataset) # (1, 3, 352, 640)
         #print(decode)
         grid_image = np.squeeze(decode, axis=0)
         grid_image = grid_image*255 # mul(255)
@@ -115,7 +116,7 @@ for name in os.listdir(args.in_path):
             tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
             pred_onnx = sess.run([label_name],{input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
                         # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-            decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1)) # (1, 3, 352, 640)
+            decode = decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=dataset) # (1, 3, 352, 640)
             grid_image = np.squeeze(decode, axis=0)
             grid_image = grid_image*255 # mul(255)
             grid_image = grid_image+0.5 # add_(0.5)

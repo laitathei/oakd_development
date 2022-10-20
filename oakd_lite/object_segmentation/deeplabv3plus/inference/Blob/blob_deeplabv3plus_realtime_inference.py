@@ -101,7 +101,7 @@ with dai.Device() as device:
         #     print(f"dims: {layer.dims}")
 
         # get layer1 data
-        lay1 = np.array(in_nn.getFirstLayerFp16()).reshape(1, 2, image_width,image_height) # in_nn.getFirstLayerFp16() = 1 x 2 x h x w
+        lay1 = np.array(in_nn.getFirstLayerFp16()).reshape(1, num_of_classes, image_width,image_height) # in_nn.getFirstLayerFp16() = 1 x num_of_classes x h x w
         lay1 = np.argmax(lay1[:3],axis=1) # get masked class indices (1, h, w)
         lay1 = np.squeeze(lay1, axis=0) # (h, w)
         found_classes = np.unique(lay1) # 1d array

@@ -83,9 +83,9 @@ class deeplabv3plus():
         Returns:
             (np.ndarray, optional): the resulting decoded color image.
         """
-        if dataset == 'grass':
-            n_classes = 2
-            label_colours = self.get_grass_labels()
+        if dataset == 'custom_dataset':
+            n_classes = 6
+            label_colours = self.get_custom_dataset_labels()
         else:
             raise NotImplementedError
 
@@ -102,8 +102,8 @@ class deeplabv3plus():
         rgb[:, :, 2] = b / 255.0
         return rgb
 
-    def get_grass_labels(self):
-        return np.asarray([[0,0,0],[128,0,0]]) # change
+def get_custom_dataset_labels():
+    return np.asarray([[0,0,0],[128,0,0],[0,128,0],[0,0,128],[256,0,0],[0,256,0],[0,0,256]]) # change with your desired mask color for your custom dataset if you want
 
     def composed_transforms(self,sample,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
         img = sample['image']

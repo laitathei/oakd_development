@@ -28,7 +28,8 @@ class deeplabv3plus():
         self.input_name = self.sess.get_inputs()[0].name
         self.label_name = self.sess.get_outputs()[0].name
         self.dataset = "custom_dataset"
-
+        self.num_class = 6
+        
     def color_callback(self,data):
         # RGB image callback
         self.rgb_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -65,15 +66,15 @@ class deeplabv3plus():
         self.rgb_fx = data.P[0]
         self.rgb_fy = data.P[5]
 
-    def decode_seg_map_sequence(self,label_masks, dataset='grass'): # change
+    def decode_seg_map_sequence(self,label_masks, n_classes, dataset='grass'): # change
         rgb_masks = []
         for label_mask in label_masks:
-            rgb_mask = self.decode_segmap(label_mask, dataset)
+            rgb_mask = self.decode_segmap(label_mask, dataset, n_classes)
             rgb_masks.append(rgb_mask)
         rgb_masks = np.array(rgb_masks).transpose([0, 3, 1, 2])
         return rgb_masks
 
-    def decode_segmap(self,label_mask, dataset, plot=False):
+    def decode_segmap(self,label_mask, dataset, n_classes, plot=False):
         """Decode segmentation class labels into a color image
         Args:
             label_mask (np.ndarray): an (M,N) array of integer values denoting
@@ -84,7 +85,7 @@ class deeplabv3plus():
             (np.ndarray, optional): the resulting decoded color image.
         """
         if dataset == 'custom_dataset':
-            n_classes = 6
+            n_classes = n_classes
             label_colours = self.get_custom_dataset_labels()
         else:
             raise NotImplementedError
@@ -102,8 +103,8 @@ class deeplabv3plus():
         rgb[:, :, 2] = b / 255.0
         return rgb
 
-def get_custom_dataset_labels():
-    return np.asarray([[0,0,0],[128,0,0],[0,128,0],[0,0,128],[256,0,0],[0,256,0],[0,0,256]]) # change with your desired mask color for your custom dataset if you want
+    def get_custom_dataset_labels(self):
+        return np.asarray([[0,0,0],[128,0,0],[0,128,0],[0,0,128],[256,0,0],[0,256,0],[0,0,256]]) # change with your desired mask color for your custom dataset if you want
 
     def composed_transforms(self,sample,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
         img = sample['image']
@@ -129,9 +130,9 @@ def get_custom_dataset_labels():
 
             tensor_in = self.composed_transforms(sample)['image']
             tensor_in = np.expand_dims(tensor_in, axis=0) # (1, 3, 352, 640)
-            pred_onnx = self.sess.run([self.label_name],{self.input_name: tensor_in.astype(np.float32)})[0] # (1, 2, 352, 640)
+            pred_onnx = self.sess.run([self.label_name],{self.input_name: tensor_in.astype(np.float32)})[0] # (1, number of class, 352, 640)
             # np.argmax(pred_onnx[:3],axis=1) return the max value indice in each row
-            decode = self.decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),dataset=self.dataset) # (1, 3, 352, 640)
+            decode = self.decode_seg_map_sequence(np.argmax(pred_onnx[:3],axis=1),self.num_class,dataset=self.dataset) # (1, number of class, 352, 640)
             grid_image = np.squeeze(decode, axis=0)
             grid_image = grid_image*255 # mul(255)
             grid_image = grid_image+0.5 # add_(0.5)

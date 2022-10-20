@@ -42,8 +42,8 @@ def decode_segmap(label_mask, dataset, plot=False):
     rgb[:, :, 2] = b / 255.0
     return rgb
 
-def get_grass_labels():
-    return np.asarray([[0,0,0],[128,0,0]]) # change
+def get_custom_dataset_labels():
+    return np.asarray([[0,0,0],[128,0,0],[0,128,0],[0,0,128],[256,0,0],[0,256,0],[0,0,256]]) # change with your desired mask color for your custom dataset if you want
 
 def composed_transforms(sample,mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
     img = sample['image']

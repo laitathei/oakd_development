@@ -1,6 +1,6 @@
 ## Export pytorch model to onnx
 ```
-python3 export_onnx.py
+python3 export_onnx.py --ckpt model_best.pth.tar --num_class 6 --input_width 640 --input_height 352
 ```
 
 ## Video or Image inference

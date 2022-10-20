@@ -136,4 +136,4 @@ for name in os.listdir(args.in_path):
             cv2.imshow("mix",cv2.cvtColor(mix,cv2.COLOR_BGR2RGB))
             cv2.waitKey(1)
 
-# python3 onnxruntime_deeplabv3plus_image_video_inference.py --in-path ./source --weight ./models/model_352_640.onnx
+# python3 onnxruntime_deeplabv3plus_image_video_inference.py --in-path ./source --weight ./models/model_352_640.onnx --num_class 6

@@ -52,20 +52,47 @@ class deeplabv3plus():
         xout_nn.input.setBlocking(False)
         detection_nn.out.link(xout_nn.input)
 
-    def decode_deeplabv3p(self,output_tensor):
-        output = output_tensor.reshape(self.image_width,self.image_height)
+    def decode_seg_map_sequence(self,label_masks, n_classes, dataset='custom_dataset'): # change
+        rgb_masks = []
+        #print(label_masks.shape) # need (1, 360, 640)
+        for label_mask in label_masks:
+            rgb_mask = self.decode_segmap(label_mask, dataset, n_classes)
+            rgb_masks.append(rgb_mask)
+        rgb_masks = np.array(rgb_masks).transpose([0, 3, 1, 2])
+        return rgb_masks
 
-        # scale to [0 ... 2555] and apply colormap
-        output = np.array(output) * (255/self.num_of_classes)
-        output = output.astype(np.uint8)
-        output_colors = cv2.applyColorMap(output, cv2.COLORMAP_JET)
+    def decode_segmap(self,label_mask, dataset, n_classes, plot=False):
+        """Decode segmentation class labels into a color image
+        Args:
+            label_mask (np.ndarray): an (M,N) array of integer values denoting
+            the class label at each spatial location.
+            plot (bool, optional): whether to show the resulting color image
+            in a figure.
+        Returns:
+            (np.ndarray, optional): the resulting decoded color image.
+        """
+        if dataset == 'custom_dataset':
+            n_classes = n_classes
+            label_colours = self.get_custom_dataset_labels()
+        else:
+            raise NotImplementedError
 
-        # reset the color of 0 class
-        output_colors[output == 0] = [0,0,0]
-        return output_colors
+        r = label_mask.copy()
+        g = label_mask.copy()
+        b = label_mask.copy()
+        for ll in range(0, n_classes):
+            r[label_mask == ll] = label_colours[ll, 0]
+            g[label_mask == ll] = label_colours[ll, 1]
+            b[label_mask == ll] = label_colours[ll, 2]
+        rgb = np.zeros((label_mask.shape[0], label_mask.shape[1], 3))
+        rgb[:, :, 0] = r / 255.0
+        rgb[:, :, 1] = g / 255.0
+        rgb[:, :, 2] = b / 255.0
+        return rgb
 
-    def show_deeplabv3p(self,output_colors, frame):
-        return cv2.addWeighted(frame,1, output_colors,0.4,0)
+    def get_custom_dataset_labels(self):
+        return np.asarray([[0,0,0],[128,0,0]]) # change with your desired mask color for your custom dataset if you want
+
 
     def main(self):
         # Pipeline defined, now the device is assigned and pipeline is started
@@ -88,6 +115,7 @@ class deeplabv3plus():
                 in_nn = q_nn.get()
 
                 frame = in_nn_input.getCvFrame()
+                origin_image = frame
                 layers = in_nn.getAllLayers()
                 layers_name = in_nn.getAllLayerNames() # ['output']
 
@@ -101,16 +129,24 @@ class deeplabv3plus():
                 #     print(f"dims: {layer.dims}")
 
                 # get layer1 data
-                lay1 = np.array(in_nn.getFirstLayerFp16()).reshape(1, self.num_of_classes, self.image_width,self.image_height) # in_nn.getFirstLayerFp16() = 1 x num_class x h x w
+                lay1 = np.array(in_nn.getFirstLayerFp16()).reshape(1, self.num_of_classes, self.image_height,self.image_width) # in_nn.getFirstLayerFp16() = 1 x num_of_classes x h x w
                 lay1 = np.argmax(lay1[:3],axis=1) # get masked class indices (1, h, w)
-                lay1 = np.squeeze(lay1, axis=0) # (h, w)
-                found_classes = np.unique(lay1) # 1d array
-                output_colors = self.decode_deeplabv3p(lay1) # (w, h, 3)
-                output_colors = np.array(output_colors).transpose([1, 0, 2]) # (h, w, 3)
-                frame = self.show_deeplabv3p(output_colors, frame)
-                cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (255, 0, 0))
-                cv2.putText(frame, "Found classes {}".format(found_classes), (2, 10), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (255, 0, 0))
+                found_classes = np.unique(np.squeeze(lay1, axis=0)) # 1d array
+                output_colors = self.decode_seg_map_sequence(lay1,self.num_of_classes,dataset="custom_dataset")
+                output_colors = np.squeeze(output_colors, axis=0)
+                output_colors = output_colors*255 # mul(255)
+                output_colors = output_colors+0.5 # add_(0.5)
+                output_colors = np.clip(output_colors,0,255) # clamp_(0, 255)
+                output_colors = np.array(output_colors,dtype=np.uint8)
+                output_colors = np.transpose(output_colors,(1,2,0)) # (h, w, 3)
+                output_colors = cv2.cvtColor(output_colors,cv2.COLOR_BGR2RGB)
+                #output_colors = np.array(output_colors).transpose([1, 0, 2]) # (h, w, 3)
+                frame = cv2.addWeighted(frame,1, output_colors,0.4,0)
+                cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (0, 255, 0))
+                cv2.putText(frame, "Found classes {}".format(found_classes), (2, 10), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (0, 255, 0))
                 cv2.imshow("nn_input", frame)
+                cv2.imshow("mask image",output_colors)
+                cv2.imshow("origin image",origin_image)
                 #t2 = time.time()
                 #print("Duration : {}".format(t2-t1))
                 counter+=1

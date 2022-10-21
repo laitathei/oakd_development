@@ -88,6 +88,7 @@ def main():
             im = im.convert("RGB")
             im.save(input_dataset_dir+"/"+json_file+".jpg",quality=95)
             shutil.move(input_dataset_dir+"/"+json_file+".jpg", JPEGImages_folder) # move JPEGImages folder
+            os.remove(input_dataset_dir+"/"+json_file+".png") # delete the png file
         if path.exists(input_dataset_dir+"/"+json_file+".json"):
             shutil.move(input_dataset_dir+"/"+json_file+".json", Json_folder) # move Json folder
         print("Done %s processing" %json_file)

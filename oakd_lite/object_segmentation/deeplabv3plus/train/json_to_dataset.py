@@ -48,6 +48,7 @@ def main():
 
     count = os.listdir(input_dataset_dir)
     jpg_file_list = glob.glob(os.path.join(input_dataset_dir, "*.jpg"))
+    png_file_list = glob.glob(os.path.join(input_dataset_dir, "*.jpg"))
     json_file_list = glob.glob(os.path.join(input_dataset_dir, "*.json"))
     # make copy of json,visualize_image,mask_image,origin_image to output dataset directory
     train_idxs = []
@@ -81,6 +82,11 @@ def main():
             PIL.Image.fromarray(lbl_viz).save(visualize_image_folder+json_file+".png") # move visualize_image folder
 
         if path.exists(input_dataset_dir+"/"+json_file+".jpg"):
+            shutil.move(input_dataset_dir+"/"+json_file+".jpg", JPEGImages_folder) # move JPEGImages folder
+        if path.exists(input_dataset_dir+"/"+json_file+".png"): # if exist png, convert it to jpg
+            im = PIL.Image.open(input_dataset_dir+"/"+json_file+".png")
+            im = im.convert("RGB")
+            im.save(input_dataset_dir+"/"+json_file+".jpg",quality=95)
             shutil.move(input_dataset_dir+"/"+json_file+".jpg", JPEGImages_folder) # move JPEGImages folder
         if path.exists(input_dataset_dir+"/"+json_file+".json"):
             shutil.move(input_dataset_dir+"/"+json_file+".json", Json_folder) # move Json folder

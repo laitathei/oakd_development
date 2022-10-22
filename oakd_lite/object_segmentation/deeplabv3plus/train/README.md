@@ -17,6 +17,7 @@ pip3 install tqdm
 <details><summary>[click for detail step]</summary>
 
 ```
+# download human dataset from https://www.kaggle.com/datasets/bijoyroy/human-segmentation-dataset
 python3 coco2labelme.py ./custom_dataset/*.json ./custom_dataset
 python3 json_to_dataset.py --input_dataset_dir ./custom_dataset --output_dataset_dir ./custom_dataset
 python3 voc_train_val_split.py --jsonfilepath ./custom_dataset/json --saveBasePath ./custom_dataset/ImageSets/Segmentation

@@ -65,18 +65,3 @@ https://github.com/luxonis/depthai-experiments/tree/master/gen2-deeplabv3_multic
 ```
 
 </details>
-
-python3 train.py --backbone mobilenet --lr 0.007 --workers 1 --epochs 50 --batch-size 8 --gpu-ids 0 --checkname deeplab-mobilenet --dataset grass
-python3 video2rosbag.py ./source/test.mp4 test.bag
-python3 pytorch_deeplabv3plus_image_video_inference.py --in-path ./source --ckpt ./run/grass/deeplab-mobilenet/model_best.pth.tar --backbone mobilenet
-python3 pytorch_deeplabv3plus_ros_inference.py
-python3 onnxruntime_deeplabv3plus_image_video_inference.py --in-path ./source --weight ./models/model_352_640.onnx
-python3 onnxruntime_deeplabv3plus_ros_inference.py
-python3 export_onnx.py
-python3 blob_deeplabv3plus_realtime_inference.py --nn_model ./models/model_352_640.blob --h 640 --w 352
-python3 blob_deeplabv3plus_ros_inference.py
-
-https://netron.app/
-
-https://blog.csdn.net/yx868yx/article/details/113778713
-https://github.com/jfzhang95/pytorch-deeplab-xception

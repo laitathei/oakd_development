@@ -1,5 +1,6 @@
 ## Export pytorch model to onnx
 ```
+python3 export_onnx.py
 ```
 
 ## Video or Image inference

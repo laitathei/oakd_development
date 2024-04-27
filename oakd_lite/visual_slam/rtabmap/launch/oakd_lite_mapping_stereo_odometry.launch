@@ -139,7 +139,7 @@
     <remap from="left/image"        to="$(arg left_image_topic)"/>
     <remap from="right/image"       to="$(arg right_image_topic)"/>
     <remap from="left/camera_info"  to="$(arg left_camera_info_topic)"/>
-    <remap from="right/camera_info" to="$(arg right_camera_info_topic)"/>wrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    <remap from="right/camera_info" to="$(arg right_camera_info_topic)"/>
 
     <param name="decimation"  type="double" value="4"/>
     <param name="voxel_size"  type="double" value="0.0"/>

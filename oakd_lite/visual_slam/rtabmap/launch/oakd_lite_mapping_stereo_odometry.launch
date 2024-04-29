@@ -1,6 +1,6 @@
 <!-- -->
 <launch>
-  <!-- Start the oakd node program-->>
+  <!-- Start the oakd node program-->
 	<node name="oakd_node" pkg="oakd_development" type="oakd_node.py" output="screen" />
 
   <!-- Choose between depth and stereo, set both to false to do only scan -->      
@@ -62,13 +62,15 @@
     <!-- Visual odometry -->
     <group if="$(arg visual_odometry)">
       <!-- Stereo Odometry -->
-      <node if="$(arg stereo)" pkg="rtabmap_ros" type="stereo_odometry" name="stereo_odometry" clear_params="$(arg clear_params)" output="$(arg output)" args="$(arg rtabmap_args)" launch-prefix="$(arg launch_prefix)">
+      <node if="$(arg stereo)" pkg="rtabmap_odom" type="stereo_odometry" name="stereo_odometry" clear_params="$(arg clear_params)" output="$(arg output)" args="$(arg rtabmap_args)" launch-prefix="$(arg launch_prefix)">
         <remap from="left/image_rect"        to="$(arg left_image_topic)"/>
         <remap from="right/image_rect"       to="$(arg right_image_topic)"/>
         <remap from="left/camera_info"       to="$(arg left_camera_info_topic)"/>
         <remap from="right/camera_info"      to="$(arg right_camera_info_topic)"/>
         <remap from="odom"                   to="$(arg odom_topic)"/>
-    
+
+        <param name="config_path" value="$(find oakd_node)/config/rtabmap.ini" />
+        <param name="GFTT/MinDistance" type="string" value="10"/> <!-- default 5 pixels -->
         <param name="frame_id"                    type="string" value="$(arg frame_id)"/>
         <param name="odom_frame_id"               type="string" value="$(arg vo_frame_id)"/>
         <param name="publish_tf"                  type="bool"   value="$(arg publish_tf_odom)"/>
@@ -81,7 +83,9 @@
   
     <!-- Visual SLAM (robot side) -->
     <!-- args: "delete_db_on_start" and "udebug" -->
-    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" clear_params="$(arg clear_params)" output="$(arg output)" args="$(arg rtabmap_args)" launch-prefix="$(arg launch_prefix)">
+    <node name="rtabmap" pkg="rtabmap_slam" type="rtabmap" clear_params="$(arg clear_params)" output="$(arg output)" args="$(arg rtabmap_args)" launch-prefix="$(arg launch_prefix)">
+      <param name="config_path" value="$(find oakd_node)/config/rtabmap.ini" />
+      <param name="proj_max_ground_height" value="0.1"/>
       <param name="subscribe_stereo"     type="bool"   value="$(arg stereo)"/>
       <param name="subscribe_odom_info" type="bool" value="true"/>
       <param name="frame_id"             type="string" value="$(arg frame_id)"/>
@@ -110,7 +114,8 @@
     </node>
   
     <!-- Visualisation RTAB-Map -->
-    <node if="$(arg rtabmapviz)" pkg="rtabmap_ros" type="rtabmapviz" name="rtabmapviz" args="-d $(arg gui_cfg)" clear_params="$(arg clear_params)" output="$(arg output)" launch-prefix="$(arg launch_prefix)">
+    <node if="$(arg rtabmapviz)" pkg="rtabmap_viz" type="rtabmap_viz" name="rtabmapviz" args="-d $(arg gui_cfg)" clear_params="$(arg clear_params)" output="$(arg output)" launch-prefix="$(arg launch_prefix)">
+      <param name="config_path" value="$(find oakd_node)/config/rtabmap.ini" />
       <param name="subscribe_depth"  type="bool" value="false"/>
       <param name="subscribe_stereo"     type="bool"   value="$(arg stereo)"/>
       <param if="$(arg visual_odometry)" name="subscribe_odom_info" type="bool" value="true"/>
@@ -130,7 +135,7 @@
   
   <!-- Visualization RVIZ -->
   <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_cfg)"/>
-  <node if="$(arg rviz)" pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb" clear_params="$(arg clear_params)" output="$(arg output)">
+  <node if="$(arg rviz)" pkg="nodelet" type="nodelet" name="points_xyzrgb" args="load rtabmap_util/point_cloud_xyzrgb standalone_nodelet  " clear_params="$(arg clear_params)" output="$(arg output)">
     <remap from="left/image"        to="$(arg left_image_topic)"/>
     <remap from="right/image"       to="$(arg right_image_topic)"/>
     <remap from="left/camera_info"  to="$(arg left_camera_info_topic)"/>
